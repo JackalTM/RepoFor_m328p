@@ -1,0 +1,25 @@
+#include <avr/io.h>
+#include <avr/delay.h>
+
+#define MY_T_PINx0 0x01U //  0b 0000 0001
+#define MY_T_PINx1 0x02U //  0b 0000 0010
+#define MY_T_PINx2 0x04U //  0b 0000 0100
+#define MY_T_PINx4 0x08U //  0b 0000 1000
+
+#define MY_F_PINx0 0xFEU //  0b 1111 1110
+#define MY_F_PINx1 0xFDU //  0b 1111 1101
+#define MY_F_PINx2 0xFBU //  0b 1111 1011
+#define MY_F_PINx4 0xF7U //  0b 1111 0111
+
+int main(void) 
+{// Test czy działan uC
+	DDRB = MY_T_PINx2; //B2 jako wyjscie  0b 0000 0100
+	while (1)
+	{
+		_delay_ms(100);
+		PORTB = PORTB & MY_F_PINx2; 
+		_delay_ms(100);
+		PORTB = PORTB | MY_T_PINx2; 
+	}
+}
+//upload_command = avrdude $UPLOAD_FLAGS -U flash:W:$SOURCE:i

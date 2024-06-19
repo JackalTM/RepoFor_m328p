@@ -1,0 +1,515 @@
+#include "LCD.h"
+#ifdef _INC_LCD
+/*****************************************************************************************************
+ * 
+*/
+
+/*****************************************************************************************************
+ * @name		void
+ * @brief		void
+ * @param[in]	void
+ * @note		void
+ * @return		void
+ */
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		DisplayLCD
+ * @brief		Constructor for class DisplayLCD
+ * @param[in]	void
+ * @note		void
+ * @return		void
+ */
+DisplayLCD::DisplayLCD(void)
+{
+	_currentPosX = 0x00;
+	_currentPosY = 0x00;
+	_displayOrder = 0x00;
+	_displayData = 0x00;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		DisplayLCD
+ * @brief		Deconstructor for class DisplayLCD
+ * @param[in]	void
+ * @note		void
+ * @return		void
+ */
+DisplayLCD::~DisplayLCD(){;}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		_PutData
+ * @brief		void
+ * @param[in]	data Input data 
+ * @note		void
+ * @return		Status if data was added
+ */
+ uint8_t DisplayLCD::_PutDataBuffer(uint8_t data)
+ {
+	if(_currentPosX < DISPLAY_BUFFER_MAX_X_AMOUT) 
+	{
+		_arrData[_currentPosY][_currentPosX] = data;
+		_currentPosX++;
+
+		return TRUE;
+	}
+	else
+	{
+		if(_currentPosY == DISPLAY_BUFFER_LINE_1)
+		{
+			_currentPosX = 0;
+			_currentPosY = DISPLAY_BUFFER_LINE_2;
+			_PutDataBuffer(data);
+		} 
+		else{;}
+	}
+	return FALSE; 
+ }
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		_ClearData
+ * @brief		Clear LCD data buffer 
+ * @param[in]	void
+ * @note		void
+ */
+void DisplayLCD::_ClearData(void)
+{
+	uint8_t i;
+
+	_currentPosX = 0;
+	_currentPosY = 0;
+
+	for(i=0; i<DISPLAY_BUFFER_MAX_X_AMOUT; i++)
+	{	_arrData[DISPLAY_BUFFER_LINE_1][i] = 0x00; }
+
+	for(i=0; i<DISPLAY_BUFFER_MAX_X_AMOUT; i++)
+	{	_arrData[DISPLAY_BUFFER_LINE_2][i] = 0x00; }
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		_ReturnHome
+ * @brief		Return cursor to start position
+ * @param[in]	void
+ * @note		void
+ */
+void DisplayLCD::_ReturnHome(void)
+{
+	_currentPosX = 0;
+	_currentPosY = DISPLAY_BUFFER_LINE_1;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PutCommand
+ * @brief		Send comand for LCD display
+ * @param[in]	cmd Input comand as uint8_t
+ * @note		Pins configuration depend from conections
+ * 				This method need to be modyfied depend on connection
+ * @return		void
+ */
+inline void DisplayLCD::_PutCommandLong(uint8_t cmd, enum_DISPLAY_DELAY_TIME_MS time_ms)
+{
+	PORTD = cmd;
+
+	// Clear B0 RS PIN do zapisywania znaku lub komendy
+	PORTB = PORTB & LCD_MASK_PORTB_CLR_B0_RS;
+
+	// Clear B1 E PIN, Set B1 E enable pin
+	PORTB = PORTB & LCD_MASK_PORTB_CLR_B1_E;
+	PORTB = PORTB | LCD_MASK_PORTB_SET_B1_E;
+
+	_delay_ms(time_ms);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PutCommand
+ * @brief		Send comand for LCD display
+ * @param[in]	cmd Input comand as uint8_t
+ * @note		Pins configuration depend from conections
+ * 				This method need to be modyfied depend on connection
+ * @return		void
+ */
+inline void DisplayLCD::_PutCommandShort(uint8_t cmd, enum_DISPLAY_DELAY_TIME_US time_us)
+{
+	PORTD = cmd;
+
+	// Clear B0 RS PIN do zapisywania znaku lub komendy
+	PORTB = PORTB & LCD_MASK_PORTB_CLR_B0_RS;
+
+	// Clear B1 E PIN, Set B1 E enable pin
+	PORTB = PORTB & LCD_MASK_PORTB_CLR_B1_E;
+	PORTB = PORTB | LCD_MASK_PORTB_SET_B1_E;
+
+	_delay_us(time_us);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PutData
+ * @brief		Send data for LCD display
+ * @param[in]	cmd Input data as uint8_t
+ * @note		Pins configuration depend from conections
+ * 				This method need to be modyfied depend on connection
+ * @return		void
+ */
+inline void DisplayLCD::_PutDataLCD(uint8_t data)
+{
+	if(_PutDataBuffer(data) == TRUE)
+	{
+		PORTD = data;
+
+		// set B0 RS PIN do zapisywania znaku lub komendy
+		PORTB = PORTB | LCD_MASK_PORTB_SET_B0_RS;
+		
+		// Clear B1 E PIN, Set B1 E enable pin
+		PORTB = PORTB & LCD_MASK_PORTB_CLR_B1_E; 
+		PORTB = PORTB | LCD_MASK_PORTB_SET_B1_E;
+
+		_delay_us(DISPLAY_DELAY_TIME_us_writeDataRAM);
+	}
+	else{;}
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		ClearDisplay
+ * @brief		Clear LCD display 
+ * @param[in]	void
+ * @note		Method working OK
+ * @return		void
+ */
+void DisplayLCD::ClearDisplay(void)
+{
+	_ClearData();
+	_PutCommandLong(DISPLAY_COMAND_CODE_ClearDisplay, DISPLAY_DELAY_TIME_ms_clr_display);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		ReturnHome
+ * @brief		Return cursor on home 
+ * @param[in]	void
+ * @note		Method working OK
+ * @return		void
+ */
+void DisplayLCD::ReturnHome(void)
+{
+	_ReturnHome();
+	_PutCommandLong(DISPLAY_COMAND_CODE_ReturnHome_BaseCode, DISPLAY_DELAY_TIME_ms_ret_home);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		SetCursorMovingDirectionL
+ * 
+ * @brief		Assign cursor moving direction to left
+
+ * @note		This function is using predefined macros
+ * 				Method working OK
+ */
+void DisplayLCD::SetCursorMovingDirectionL(void)
+{	
+	_currentDirection = DISPLAY_CURRSOR_L;
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_EntryModee(LCD_ENTRY_MODE_ID_CURS_DIR_L, LCD_ENTRY_MODE_SH_DISP_SHIFT_OFF), 
+		DISPLAY_DELAY_TIME_us_entry_mode);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		SetCursorMovingDirectionR
+ * 
+ * @brief		Assign cursor moving direction to right
+
+ * @note		This function is using predefined macros
+ * 				Method working OK
+ */
+void DisplayLCD::SetCursorMovingDirectionR(void)
+{
+	_currentDirection = DISPLAY_CURRSOR_R;
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_EntryModee(LCD_ENTRY_MODE_ID_CURS_DIR_R, LCD_ENTRY_MODE_SH_DISP_SHIFT_OFF),
+		DISPLAY_DELAY_TIME_us_entry_mode);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		SetDisplayMovingDirectionL
+ * 
+ * @brief		Assign whole display moving direction to left
+ * 
+ * @note		This function is using predefined macros
+ * 				Method working OK
+ */
+void DisplayLCD::SetDisplayMovingDirectionL(void)
+{
+	_currentDirection = DISPLAY_MOVING_L;
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_EntryModee(LCD_ENTRY_MODE_ID_CURS_DIR_L, LCD_ENTRY_MODE_SH_DISP_SHIFT_ON),
+		DISPLAY_DELAY_TIME_us_entry_mode);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		SetDisplayMovingDirectionR
+ * 
+ * @brief		Assign whole display moving direction to right
+ * 
+ * @note		This function is using predefined macros
+ * 				Method working OK
+ */
+void DisplayLCD::SetDisplayMovingDirectionR(void)
+{
+	_currentDirection = DISPLAY_MOVING_R;
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_EntryModee(LCD_ENTRY_MODE_ID_CURS_DIR_R, LCD_ENTRY_MODE_SH_DISP_SHIFT_ON),
+		DISPLAY_DELAY_TIME_us_entry_mode);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		Initialize
+ * @brief		LCD display is initialize to default mode
+ * 
+ * @note		1. Wait more than 40ms after VDD rises to 4,5V
+ * 				2. Function set: 
+ * 				3. Function set: 
+ * 				4. Display ON / OFF control
+ * 				5. Clear display
+ * 				6. Entry mode set 
+ * 				7. Return home
+ */
+void DisplayLCD::Initialize_8bitInterface(void)
+{
+	// 1. Wait more than 40ms after VDD rises to 4,5V
+	_delay_ms(DISPLAY_DELAY_TIME_ms_init);
+
+	// 2. Function set: 
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_FunctionSet(
+			LCD_FUNCTION_SET_DL_LINE_AMOUT_8,
+			LCD_FUNCTION_SET_N_LINE_2,
+			LCD_FUNCTION_SET_F_5X11_DOTS),
+		DISPLAY_DELAY_TIME_us_functionSet);
+
+	// 3. Function set: 
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_FunctionSet(
+			LCD_FUNCTION_SET_DL_LINE_AMOUT_8,
+			LCD_FUNCTION_SET_N_LINE_2,
+			LCD_FUNCTION_SET_F_5X11_DOTS),
+		DISPLAY_DELAY_TIME_us_functionSet);
+
+	// 4. Display ON / OFF control
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_DisplayControl(
+			LCD_DISPLAY_CONTROL_D_DISPLAY_ON,
+			LCD_DISPLAY_CONTROL_C_CURSOR_ON,
+			LCD_DISPLAY_CONTROL_B_CURSOR_BLINK_OFF),
+		DISPLAY_DELAY_TIME_us_displ_mode);
+
+	// 5. Clear display
+	ClearDisplay();
+
+	//6. Entry mode set 
+	_PutCommandShort(DISPLAY_COMAND_CODE_FUN_EntryModee(
+			LCD_ENTRY_MODE_ID_CURS_DIR_R,
+			LCD_ENTRY_MODE_SH_DISP_SHIFT_OFF),
+		DISPLAY_DELAY_TIME_us_entry_mode);
+
+	// 7. Return home
+	ReturnHome();
+}
+//====================================================================================================
+/*****************************************************************************************************
+ * @name		_CheqCursorToL
+ * @brief		Gets amout of characters from current cursor place to left end of LCD
+ * @param[in]	void
+ * @note		Private method used by other public methods
+ * @return		nChars: Number of character from corsor position to left end
+ */
+uint8_t DisplayLCD::_CheqCursorToL(void)
+{
+	return _currentPosX;
+}
+//====================================================================================================
+/*****************************************************************************************************
+ * @name		_CheqCursorToR
+ * @brief		Gets amout of characters from current cursor place to right end of LCD
+ * @param[in]	void
+ * @note		Private method used by other public methods
+ * @return		nChars Number of character from corsor position to left end
+ */
+uint8_t DisplayLCD::_CheqCursorToR(void)
+{
+	uint8_t tChars;
+	tChars = _currentPosX + 1;
+	tChars = DISPLAY_BUFFER_MAX_X_AMOUT - tChars;
+	return tChars;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		SetCurrsorToPosition
+ * @brief		Cursor is placed to certain position
+ * 
+ * @param[in]	n Amount of uint8_ts to move 
+ * @param[in]	line Line top or bottom, input of type displayLineOffset_enum
+ * 
+ * @note		To work correctly LCD need to be initialized in proper way
+ */
+#define _DISPLAY_LCD_POSITION_MAX_MASK 0x0FU
+void DisplayLCD::SetCurrsorToPosition(uint8_t n, displayLineOffset_enum line)
+{
+	n = (n & _DISPLAY_LCD_POSITION_MAX_MASK);
+
+	switch (line)
+	{
+	case DISPLAY_LINE_TOP:
+		n = n | DISPLAY_LINE_TOP;
+		_PutCommandShort(DISPLAY_COMAND_CODE_FUN_SetDDRAM_ADDR(n), DISPLAY_DELAY_TIME_us_setDDRAM);
+		break;
+
+	case DISPLAY_LINE_BOT:
+		n = n | DISPLAY_LINE_BOT;
+		_PutCommandShort(DISPLAY_COMAND_CODE_FUN_SetDDRAM_ADDR(n), DISPLAY_DELAY_TIME_us_setDDRAM);
+		break;
+	
+	default:
+		break;
+	}
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		OrderDisplay
+ * @brief		Data for display is save in private variable
+ * @param[in]	data Data for dispay
+ * @note		void
+ * @return		void
+ */
+void DisplayLCD::OrderDisplay(uint8_t data)
+{
+	if(_displayOrder == FALSE) 
+	{ 
+		_displayData = data;
+		_displayOrder = TRUE;
+	}
+	else{;}
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PrintStr
+ * @brief		Print charcaters array in place set by SetCurrsorToPosition
+ * @param[in]	pStrArray Pointer to constant character array
+ * @param[in]	len Lenght of that string
+ * @note		This method required SetCurrsorToPosition to be called before 
+ * @return		Amount of characters that have been printed 
+ */
+uint8_t DisplayLCD::PrintStr(const uint8_t* pStrArray, uint8_t len)
+{
+	uint8_t i, j;
+// 1. Calculate amount of available space till end of line
+	j = (DISPLAY_BUFFER_MAX_X_AMOUT - _currentPosX);
+
+// 2. If delete lenght more than free space reduce space to available
+	if(len >= j)
+	{	len = j;}
+	else
+	{	return j;}
+
+// 3. Set cursor to demanding direction
+	SetCursorMovingDirectionR();
+
+// 4. Put demanded characters on LCD, in this situation from char array
+	for(i=0; i<len; i++)
+	{	
+		_PutDataLCD(*(pStrArray + i));
+		_currentPosX++;
+	}
+	return len;
+}
+//====================================================================================================
+/*****************************************************************************************************
+ * @name		DelStr
+ * @brief		Delete charcaters array in place set by SetCurrsorToPosition
+ * @param[in]	inChar Character that will be placed.
+ * @param[in]	len Amount of characters that will be placed
+ * @note		This method required SetCurrsorToPosition to be called before 
+ * @return		Amount of characters that have been deleted
+ */
+uint8_t DisplayLCD::DelStr(const uint8_t inChar, uint8_t len)
+{
+	uint8_t i, j;
+// 1. Calculate amount of available space till end of line
+	j = (_currentPosX + 1);
+
+// 2. If delete lenght more than free space reduce space to available
+	if(len > j)
+	{	len = j;
+		return j;}
+	else{;}
+
+// 3. Set cursor to demanding direction
+	SetCursorMovingDirectionL();
+
+// 4. Put demanded characters on LCD, in this situation blank 
+	for(i=0; i<len; i++)
+	{	
+		_currentPosX--;
+		_PutDataLCD(inChar);
+	}
+	return len;
+}
+
+/*****************************************************************************************************
+ * @name		DisplayIfOrder
+ * @brief		Display data in order to display exist 
+ * @param[in]	void
+ * @note		void
+ * @return		void
+ */
+void DisplayLCD::DisplayMenagment(void)
+{
+	uint8_t tData;
+
+	if(_displayOrder == TRUE)
+	{	tData = _displayData;
+
+		switch (tData)
+		{
+		case KEYCODE_10: // STOP
+			ClearDisplay();
+			break;
+
+		case KEYCODE_11: // GO
+			ReturnHome(); 
+			break;
+
+		case KEYCODE_12: // LOCK
+			//PrintStr(pArray, 4);
+			break;
+
+		case KEYCODE_13: // ON / OFF
+			DelStr(' ', 1);
+			break;
+
+		case KEYCODE_14: // ESC
+			SetCursorMovingDirectionR();
+			break;
+
+		case KEYCODE_15: // ENT
+			SetCursorMovingDirectionL();
+			break;
+		
+		default:
+			_PutDataLCD(tData);
+			break;
+		}
+
+		_displayOrder = FALSE;
+	}
+	else{;}
+}
+//====================================================================================================
+
+#endif // _INC_LCD
