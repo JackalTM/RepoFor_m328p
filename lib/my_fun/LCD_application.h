@@ -32,9 +32,9 @@ class LCD_application: private LCD_DataControl, LCD_016N002B_CFH_ET
 private:
     ConvertTime _Convert;
     uint8_t row_n, col_n;
-    volatile uint8_t _data_from_keypad_IRQ, _display_data_order_active;
+    volatile bool _data_from_keypad_IRQ, _display_data_order_active;
     volatile uint8_t _strLen, _n_row, _n_col;
-    volatile char _arrBuffer[16];
+    char _arrBuffer[16];
 
 public:
     LCD_application(uint8_t row_n, uint8_t col_n);
@@ -49,7 +49,9 @@ public:
 //============================================================================================
 // Definitions for print string data 
     void PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
-    void Order_PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
+    void PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
+    
+    void Order_PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void Execute_PrintStr(void);
 //============================================================================================
 

@@ -215,6 +215,43 @@ uint8_t LCD_DataControl::PrintStr(const char pStr[], uint8_t strLen)
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		PrintStr
+ * @brief		Print array of characters on LCD screen
+ * 
+ * @param[in]	pStr Constatnt array of pointers to pint on LCD screen
+ * @param[in]	strLen Lenght of a constant array of characters
+ * 
+ * @note		Amount of characters that will not be printed return as uint8_t
+ * 				To print on certain place method SetCurrsorToPosition need to be used
+ * @return		Amout of printed characters
+ */
+uint8_t LCD_DataControl::PrintStr(char pStr[], uint8_t strLen)
+{
+	uint8_t i, iMAX;
+
+	iMAX = AmountCharsToEnd();
+	if(iMAX == 0) { return 0; }
+	else{;}
+
+	if(strLen > iMAX)
+	{	strLen = iMAX;}
+	else{;}
+
+	for(i=0; i<strLen; i++)
+	{
+		_arrDisplayData[_idx_col][_idx_row] = pStr[i];
+		_idx_row++;
+	}
+
+	if(_idx_row > DISPLAY_BUFFER_CURRSOR_IDX_END)
+	{	_idx_row = DISPLAY_BUFFER_CURRSOR_IDX_END;}
+	else{;}
+
+	return strLen;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		DeletStr
  * @brief		Print array of characters on LCD screen
  * 

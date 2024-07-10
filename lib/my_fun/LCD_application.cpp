@@ -134,20 +134,73 @@ void LCD_application::PrintStr(const char arrString[], uint8_t strLen, uint8_t n
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		PrintStr
+ * @brief		Put array of string on LCD display
+ * @param[in]	arrString	String array buffer
+ * @param[in]	strLen		String lenght
+ * @param[in]	n_row		Row place to display
+ * @param[in]	n_col		Column place to display
+ * @note		void	
+ * @return		void
+ */
+void LCD_application::PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col)
+{
+	uint8_t i, tByte;
+
+	// 1. Set cursor placement for LCD.
+	LCD_DataControl::SetCurrsorToPosition(&n_row, &n_col);
+	if(n_col == 0x00)
+	{	LCD_016N002B_CFH_ET::SetCurrsorToPosition(n_row, DISPLAY_LINE_1);}
+	else // (n_col == 0x01)
+	{	LCD_016N002B_CFH_ET::SetCurrsorToPosition(n_row, DISPLAY_LINE_2);}
+
+	// 2. Cheque posible characters amount. And asign lenght for loop.
+	strLen = LCD_DataControl::PrintStr(arrString, strLen);
+
+	// 3. Send data for LCD display.
+	for(i=0; i<strLen; i++)
+	{
+		tByte = (uint8_t)arrString[i];
+		LCD_016N002B_CFH_ET::PutData(tByte);
+	}
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		Order_PrintStr
  * @brief		void
- * @param[in]	void
+ * 
+ * @param[in]	arrString
+ * @param[in]	strLen
+ * @param[in]	n_row
+ * @param[in]	n_col
+ * 
  * @note		void
  * @return		void
  */
-void LCD_application::Order_PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
+void LCD_application::Order_PrintStr(char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
 {
-	_strLen = strLen;
-	_n_row = n_row;
-	_n_col = n_col;
+	uint8_t i=0;
 
-	uint8_t i;
+	if(_display_data_order_active == false)	
+	{ 	
+		if(strLen > 16) {strLen = 16;}
+		else{;}
 
+		while(i<strLen)
+		{	
+			_arrBuffer[i] = arrString[i];
+			i++;
+		}
+
+		_strLen = strLen;
+		_n_row = n_row;
+		_n_col = n_col;
+		
+		_display_data_order_active = true;
+	}
+	else	
+	{ 	return; }
 }
 //====================================================================================================
 
@@ -160,7 +213,14 @@ void LCD_application::Order_PrintStr(const char arrString[], uint8_t strLen, uin
  */
 void LCD_application::Execute_PrintStr(void)
 {
-	//PrintStr();
+	if(_display_data_order_active == true)	
+	{ 	
+		PrintStr(_arrBuffer, _strLen, _n_row, _n_col);
+
+		_display_data_order_active = false;
+	}
+	else	
+	{ 	return; }
 }
 //====================================================================================================
 
@@ -173,7 +233,7 @@ void LCD_application::MenuTest(void)
 {
 	uint8_t tData;
 
-	if(_display_data_order_active == TRUE)
+	if(_display_data_order_active == true)
 	{	tData = _data_from_keypad_IRQ;
 
 		switch (tData)
@@ -226,7 +286,7 @@ void LCD_application::MenuTwoTeamsIncrease(void)
 {
 	uint8_t tData;
 
-	if(_display_data_order_active == TRUE)
+	if(_display_data_order_active == true)
 	{	tData = _data_from_keypad_IRQ;
 
 		switch (tData)

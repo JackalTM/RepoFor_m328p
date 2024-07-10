@@ -69,6 +69,8 @@ public:
     // due to current cursor position
     uint8_t PrintStr(const char pStr[], uint8_t strLen);
     uint8_t DeletStr(const char pStr[], uint8_t strLen);
+    uint8_t PrintStr(char pStr[], uint8_t strLen);
+    uint8_t DeletStr(char pStr[], uint8_t strLen);
 };
 //==============================================================================================
 #endif // ifndef LCD_DATA_CONTROL_H_

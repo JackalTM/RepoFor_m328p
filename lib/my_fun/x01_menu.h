@@ -30,6 +30,7 @@ private:
 //==============================================
 public:
 //==============================================================================================================
+// Setup external reference for internal manipulation. Now inside this class sccess is set to initialized class
     MenuApplication(LCD_application& Ref_LCD_application,  Keypad4x4& RefKeypad4x4):
         Ref_LCD_application(Ref_LCD_application), RefKeypad4x4(RefKeypad4x4){;}
     ~MenuApplication(){;}
