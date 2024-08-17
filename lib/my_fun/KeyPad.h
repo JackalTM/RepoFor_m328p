@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************************************************
  * KeyPad.h
  *
  * Created: 24.11.2020 12:44:13
@@ -26,7 +26,7 @@ typedef struct
 }keypadState_t;
 
 
-/***********************************************************************************************
+/*******************************************************************************************************************
  * Definitions of a key code value.
  * Depend on demanding values
 */
@@ -73,13 +73,17 @@ typedef struct
 #endif // KEYPAD_KEYDEF_ASCI
 //==============================================================================================
 
-/***********************************************************************************************
+/*******************************************************************************************************************
  * Definitions for certain  PORT output data
  * Need to be modified depend on connection
 */
-#define KEYPAD_ARRAY_AMOUNT_MAX_N   (uint8_t)0x04 // Maximum elements amont 
-#define KEYPAD_ARRAY_AMOUNT_ROW     (uint8_t)0x04 // Maximum elements in row array 
-#define KEYPAD_ARRAY_AMOUNT_COL     (uint8_t)0x04 // Maximum elements in col array 
+#define KEYPAD4x4_ARRAY_AMOUNT_MAX_N   (uint8_t)0x04 // Maximum elements amont 
+#define KEYPAD4x4_ARRAY_AMOUNT_ROW     (uint8_t)0x04 // Maximum elements in row array 
+#define KEYPAD4x4_ARRAY_AMOUNT_COL     (uint8_t)0x04 // Maximum elements in col array 
+
+#define KEYPAD1x4_ARRAY_AMOUNT_MAX_N   (uint8_t)0x04 // Maximum elements amont 
+#define KEYPAD1x4_ARRAY_AMOUNT_ROW     (uint8_t)0x01 // Maximum elements in row array 
+#define KEYPAD1x4_ARRAY_AMOUNT_COL     (uint8_t)0x04 // Maximum elements in col array 
 
 // MAcros for PORT and PIB states
 #ifdef KEYPAD_ACTIVE_STATE_LOW
@@ -100,15 +104,15 @@ typedef struct
 
 // Port mask macro
 #define KEYPAD_CODE_PORTx_MASK      (uint8_t)0x0F // Mask for output port valid data
-#define KEYPAD_CODE_PORTx_MASK_F(x) (KEYPAD_CODE_PORTx_MASK & x)
+#define KEYPAD_CODE_PORTx_MASK_F(x) (KEYPAD_CODE_PORTx_MASK & x) // 0b 0000 1111 & x
 // Pin mask macro
 #define KEYPAD_CODE_PINx_MASK       (uint8_t)0x3C // Mask for input PIN valid data
-#define KEYPAD_CODE_PINx_MASK_F(x)  (KEYPAD_CODE_PINx_MASK & x)
+#define KEYPAD_CODE_PINx_MASK_F(x)  (KEYPAD_CODE_PINx_MASK & x)  // 0b 0011 1100 & x
 //==============================================================================================
 
 enum outputColumn_enum {COLUMN_1 = 0, COLUMN_2 = 1, COLUMN_3 = 2, COLUMN_4 = 3};
 
-/***********************************************************************************************
+/*******************************************************************************************************************
  * Debounce state machine value definitions
 */
 #define KEYPAD_DEBOUNCE_x00_INIT        (uint8_t)0x00 // State initialization
@@ -123,7 +127,7 @@ enum outputColumn_enum {COLUMN_1 = 0, COLUMN_2 = 1, COLUMN_3 = 2, COLUMN_4 = 3};
 #define KEYPAD_KEYPAD_STATE_PULS        KEYPAD_DEBOUNCE_x22_RISING_EDGE     
 //==============================================================================================
 
-/***********************************************************************************************
+/*******************************************************************************************************************
  * 
 */
 #define KEYPAD_IRQ_OPERATION_x00_SET_OUTPUT (uint8_t)0x00 // Set output port for every column
@@ -131,8 +135,8 @@ enum outputColumn_enum {COLUMN_1 = 0, COLUMN_2 = 1, COLUMN_3 = 2, COLUMN_4 = 3};
 #define KEYPAD_IRQ_OPERATION_x22_DECODE_BUTTON (uint8_t)0x22 // Decode debounced button
 //==============================================================================================
 
-/***********************************************************************************************
- * Class for menage keypad 
+/*******************************************************************************************************************
+ * Class for menage keypad 4x4
 */
 class Keypad4x4
 {
@@ -142,14 +146,14 @@ private:
 */
 uint8_t irq_n, _colnum, _PORTx, _PINx;
 uint8_t _keydecoded, _keystate;
-uint8_t arrDebounce[KEYPAD_ARRAY_AMOUNT_COL];
-uint8_t arrCounter[KEYPAD_ARRAY_AMOUNT_COL];
+uint8_t arrDebounce[KEYPAD4x4_ARRAY_AMOUNT_COL];
+uint8_t arrCounter[KEYPAD4x4_ARRAY_AMOUNT_COL];
 
-const uint8_t arrayPortOutNegative[KEYPAD_ARRAY_AMOUNT_MAX_N] = 
+const uint8_t arrayPortOutNegative[KEYPAD4x4_ARRAY_AMOUNT_MAX_N] = 
 {   KEYPAD_CODE_PORTx_01_N, KEYPAD_CODE_PORTx_02_N, 
     KEYPAD_CODE_PORTx_03_N, KEYPAD_CODE_PORTx_04_N};
 
-const uint8_t arrKeys2D[KEYPAD_ARRAY_AMOUNT_ROW][KEYPAD_ARRAY_AMOUNT_COL] =
+const uint8_t arrKeys2D[KEYPAD4x4_ARRAY_AMOUNT_ROW][KEYPAD4x4_ARRAY_AMOUNT_COL] =
 {   {KEYCODE_01, KEYCODE_02, KEYCODE_03, KEYCODE_10},
     {KEYCODE_04, KEYCODE_05, KEYCODE_06, KEYCODE_11},
     {KEYCODE_07, KEYCODE_08, KEYCODE_09, KEYCODE_12},
@@ -175,8 +179,48 @@ public:
     uint8_t KeypadStateEvaluation(void);
     uint8_t GetKeyCode(void);
 };
+//==================================================================================================================
+
+/*******************************************************************************************************************
+ * Class for menage keypad 1x4
+*/
+class KeyPad1x4
+{
+private:
+/***********************************************************************************************
+ * Definitions for private class varibales 
+*/
+uint8_t irq_n, _colnum, _PINx;
+uint8_t _keydecoded, _keystate;
+uint8_t arrDebounce[KEYPAD1x4_ARRAY_AMOUNT_ROW];
+uint8_t arrCounter[KEYPAD1x4_ARRAY_AMOUNT_ROW];
+
+const uint8_t arrayPortOutNegative[KEYPAD1x4_ARRAY_AMOUNT_MAX_N] = 
+{   KEYPAD_CODE_PORTx_01_N, KEYPAD_CODE_PORTx_02_N, 
+    KEYPAD_CODE_PORTx_03_N, KEYPAD_CODE_PORTx_04_N};
+
+const uint8_t arrKeys2D[KEYPAD1x4_ARRAY_AMOUNT_ROW][KEYPAD1x4_ARRAY_AMOUNT_COL] =
+{   {KEYCODE_01, KEYCODE_02, KEYCODE_03, KEYCODE_04}};
+
+/***********************************************************************************************
+ * Definitions for debounce state on keypad
+*/
+uint8_t _DEBOUNCE_AMOUNT;
+volatile uint8_t keyCode;
+volatile uint8_t keyState;
 //==============================================================================================
+public:
+    KeyPad1x4(uint8_t dbAmount);
+    ~KeyPad1x4(void);
+   
+    uint8_t DecodeKeyCode(uint8_t inPIN);
+    uint8_t PadDebounce(uint8_t* pDebounce, uint8_t* pCounter, uint8_t inState);
+
+    uint8_t KeypadStateEvaluation(void);
+    uint8_t GetKeyCode(void);
+};
+//==================================================================================================================
 #endif // ifndef KEYPAD_H_
-//==============================================================================================
+//==================================================================================================================
 #endif // #ifdef _INC_KEYPAD
-//==============================================================================================
+//==================================================================================================================

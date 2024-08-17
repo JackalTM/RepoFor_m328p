@@ -5,7 +5,7 @@
 #define _INC_LCD_APPLICATION
 #define _INC_KEYPAD
 #define _INC_x01_MENU_H
-
+//#define _INC_x02_MENU_H
 
 /****************************************************************************************************************
  * Global macros definitions

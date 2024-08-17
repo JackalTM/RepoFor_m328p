@@ -178,7 +178,45 @@ void LCD_application::PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, u
  * @note		void
  * @return		void
  */
-void LCD_application::Order_PrintStr(char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
+void LCD_application::Order_PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
+{
+	uint8_t i=0;
+
+	if(_display_data_order_active == false)	
+	{ 	
+		if(strLen > 16) {strLen = 16;}
+		else{;}
+
+		while(i<strLen)
+		{	
+			_arrBuffer[i] = arrString[i];
+			i++;
+		}
+
+		_strLen = strLen;
+		_n_row = n_row;
+		_n_col = n_col;
+		
+		_display_data_order_active = true;
+	}
+	else	
+	{ 	return; }
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		Order_PrintStr
+ * @brief		void
+ * 
+ * @param[in]	arrString
+ * @param[in]	strLen
+ * @param[in]	n_row
+ * @param[in]	n_col
+ * 
+ * @note		void
+ * @return		void
+ */
+void LCD_application::Order_PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col)
 {
 	uint8_t i=0;
 
@@ -225,107 +263,36 @@ void LCD_application::Execute_PrintStr(void)
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		DisplayDataMenagment
- * @brief		Cyclical call for display data 
- * @note		Depend on key presed diffrent operation is taken
+ * @name		PrintInt
+ * @brief		void
+ * @param[in]	number Number to put on LCD display type uint8_t
+ * @param[in]	n_row LCD row index when start display number
+ * @param[in]	n_col LCD column index when start display number
+ * @note		void
+ * @return		void
  */
-void LCD_application::MenuTest(void)
+void LCD_application::PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col)
 {
-	uint8_t tData;
-
-	if(_display_data_order_active == true)
-	{	tData = _data_from_keypad_IRQ;
-
-		switch (tData)
-		{
-		case KEYCODE_10: // STOP
-			ClearDisplayData();
-
-			PrintStr("RED", 3, 0, 0);
-			PrintStr("BLU", 3, 0, 1);
-			break;
-
-		case KEYCODE_11: // GO
-			ReturnCursorHome();
-			break;
-
-		case KEYCODE_12: // LOCK
-			PrintStr("Ticket 1", 8, LCD_APP_ROW_START, 0);
-			break;
-
-		case KEYCODE_13: // ON / OFF
-			PrintStr("Ticket 2", 8, LCD_APP_ROW_START, 1);
-			break;
-
-		case KEYCODE_14: // ESC
-			;
-			break;
-
-		case KEYCODE_15: // ENT
-			;
-			break;
-		
-		default:
-			LCD_DataControl::PutOneChar(tData);
-			LCD_016N002B_CFH_ET::PutData(tData);
-			break;
-		}
-
-		_display_data_order_active = FALSE;
-	}
-	else{;}
+	_Convert.NumToString(number, _arrBuffer, TYPE_DEC_uin8_t);
+	PrintStr(_arrBuffer, TYPE_DEC_uin8_t, n_row, n_col);
 }
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		MenuTwoTeamsIncrease
+ * @name		PrintInt
  * @brief		void
+ * @param[in]	number Number to put on LCD display, type uint16_t
+ * @param[in]	n_row LCD row index when start display number
+ * @param[in]	n_col LCD column index when start display number
  * @note		void
+ * @return		void
  */
-void LCD_application::MenuTwoTeamsIncrease(void)
+void LCD_application::PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col)
 {
-	uint8_t tData;
-
-	if(_display_data_order_active == true)
-	{	tData = _data_from_keypad_IRQ;
-
-		switch (tData)
-		{
-		case KEYCODE_10: // STOP
-			ClearDisplayData();
-
-			PrintStr("RED", 3, 0, 0);
-			PrintStr("BLU", 3, 0, 1);
-			break;
-
-		case KEYCODE_11: // GO
-			ReturnCursorHome();
-			break;
-
-		case KEYCODE_12: // LOCK
-			PrintStr("Ticket 1", 8, LCD_APP_ROW_START, 0);
-			break;
-
-		case KEYCODE_13: // ON / OFF
-			PrintStr("Ticket 2", 8, LCD_APP_ROW_START, 1);
-			break;
-
-		case KEYCODE_14: // ESC
-			;
-			break;
-
-		case KEYCODE_15: // ENT
-			;
-			break;
-		
-		default: // For key code fom (0 to 9)
-			break;
-		}
-
-		_display_data_order_active = FALSE;
-	}
-	else{;}
+	_Convert.NumToString(number, _arrBuffer, TYPE_DEC_uint16_t);
+	PrintStr(_arrBuffer, TYPE_DEC_uint16_t, n_row, n_col);
 }
 //====================================================================================================
+
 #endif // _INC_LCD_APPLICATION
 //====================================================================================================

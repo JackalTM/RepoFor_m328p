@@ -60,17 +60,17 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
 
 /*****************************************************************************************************
  * @name		  Uint_to_str_dec
- * @brief		  void
- * @param[in]	dest Pointer to destination array with strig data 
+ * @brief		  Recurent function to convert number of type int to string format
+ * @param[in]	pStr Pointer to destination array with strig data 
  * @param[in] uint Number to convert into string
  * @note		  void
- * @return		void
+ * @return		Pointer to next addr where char will be placed
  */
  char* NumbersConversion::Uint_to_str_dec(char *pStr, uint8_t uint)
 {
   _Str_n++;
   if(_Str_n < _StrMax)
-  {
+  {// Only when char array max len is not reached
     if (uint >= 10) 
     {
       pStr = Uint_to_str_dec(pStr, uint/10);
@@ -80,7 +80,7 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
     return pStr;
   }
   else
-  {
+  {// char array max lenght is reached then return 
     return pStr;
   }
 }
@@ -88,17 +88,17 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
 
 /*****************************************************************************************************
  * @name		  Uint_to_str_hex
- * @brief		  void
- * @param[in]	dest Pointer to destination array with strig data 
+ * @brief		  Recurent function to convert number of type int to string format
+ * @param[in]	pStr Pointer to destination array with strig data 
  * @param[in] uint Number to convert into string
  * @note		  void
- * @return		void
+ * @return		Pointer to next addr where char will be placed
  */
  char* NumbersConversion::Uint_to_str_hex(char *pStr, uint8_t uint)
 {
   _Str_n++;
   if(_Str_n < _StrMax)
-  {
+  {// Only when max len is not reached
     if (uint >= 0x10) 
     {
       pStr = Uint_to_str_hex(pStr, uint/0x10);
@@ -106,6 +106,7 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
     uint = (uint%0x10);
 
   // In ASCI: '7'(55) + 10 = 'A'(65)
+  // Specyfic calculation for this aspect
     if(uint > 9)  { uint = ('7' + uint);} // '7' + 10 = 'A'
     else          { uint = ('0' + uint);}
     
@@ -114,7 +115,7 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
     return pStr;
   }
   else
-  {
+  {// char array max lenght is reached then return 
     return pStr;
   }
 }
@@ -122,7 +123,7 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
 
 /*****************************************************************************************************
  * @name		ConvertTime
- * @brief		Deconstructor
+ * @brief		Constructor
  */
 ConvertTime::ConvertTime(void)
 {

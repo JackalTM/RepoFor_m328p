@@ -7,27 +7,166 @@
 #include "x01_menu.h"
 #ifdef _INC_x01_MENU_H
 
-/*****************************************************************************************************
- * @name		Main_Display
+/*******************************************************************************************************************
+ * @name		DisplaySetOrder
  * @brief		void
- * @param[in]	void
+ * @param[in]	inData Data from keypad to display
  * @note		void
  * @return		void
  */
-void MenuApplication::Main_Display(void)
-{
-	Ref_LCD_application.MenuTest();
-}
-//====================================================================================================
+ bool MenuApplication_4x4::DisplaySetOrder(uint8_t inData)
+ {
+	if(_display_data_order_active == false)
+	{
+		_data_from_keypad_IRQ = inData;
+		_display_data_order_active = true;
+		return true;
+	}
+	else
+	{	return false; }
+ }
+//==================================================================================================================
 
-/*****************************************************************************************************
- * @name		IRQ_TIM1_Display
- * @brief		void
+/*******************************************************************************************************************
+ * @name		InitializeDisplay_AppTest1
+ * @brief		Prepare LCD display data for Display_App_Test1
  * @param[in]	void
- * @note		void
+ * @note		Informations RED and BLU team are displayed in certain place
  * @return		void
  */
-void MenuApplication::IRQ_TIM1_Display(void)
+void MenuApplication_4x4::InitializeDisplay_AppTest1(void)
+{
+	Ref_LCD_application.ClearDisplayData();
+
+	Ref_LCD_application.PrintStr("RED", 3, 0, 0);
+	Ref_LCD_application.PrintStr("BLU", 3, 0, 1);
+
+	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
+	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
+
+	Ref_LCD_application.PrintStr("000", 3, 8, 0);
+	Ref_LCD_application.PrintStr("000", 3, 8, 1);
+
+	_ticketRedNum = 0;
+	_ticketBluNum = 0;
+}
+//==================================================================================================================
+
+/*******************************************************************************************************************
+ * @name		Display_App_Test1
+ * @brief		Display app for kepad 4x4
+ * @param[in]	void
+ * @note		Data and screen to display is set from DisplaySetOrder
+ * @return		void
+ */
+void MenuApplication_4x4::Display_App_Test1(void)
+{
+	uint8_t tData;
+
+	if(_display_data_order_active == true)
+	{	tData = _data_from_keypad_IRQ;
+
+		switch (tData)
+		{
+		case KEYCODE_11: // Keypad 11, Increase RED tickets
+			_ticketRedNum++;
+			Ref_LCD_application.PrintInt(_ticketRedNum, 8,0);
+			break;
+
+		case KEYCODE_12: // Keypad 12, Decrease RED tickets
+			_ticketRedNum--;
+			Ref_LCD_application.PrintInt(_ticketRedNum, 8,0);
+			break;
+
+		case KEYCODE_13: // Keypad 13, Increase BLU tickets
+			_ticketBluNum++;
+			Ref_LCD_application.PrintInt(_ticketBluNum, 8,1);
+			break;
+
+		case KEYCODE_14: // Keypad 14, Decrease BLU tickets
+			_ticketBluNum--;
+			Ref_LCD_application.PrintInt(_ticketBluNum, 8,1);
+			break;
+
+		default:// Other keypad
+			break;
+		}
+		_display_data_order_active = false;
+	}
+	else{;}
+}
+//==================================================================================================================
+
+/*******************************************************************************************************************
+ * @name		InitializeDisplay_AppTest2
+ * @brief		Prepare LCD display data for Display_App_Test2
+ * @param[in]	void
+ * @note		Informations RED and BLU team are displayed in certain place
+ * @return		void
+ */
+void MenuApplication_4x4::InitializeDisplay_AppTest2(void)
+{
+	Ref_LCD_application.ClearDisplayData();
+
+	Ref_LCD_application.PrintStr("RED", 3, 0, 0);
+	Ref_LCD_application.PrintStr("BLU", 3, 0, 1);
+
+	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
+	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
+}
+//==================================================================================================================
+
+/*******************************************************************************************************************
+ * @name		Display_App_Test2
+ * @brief		Display app for kepad 1x4
+ * @param[in]	void
+ * @note		Test display application 
+ * @return		void
+ */
+void MenuApplication_4x4::Display_App_Test2(void)
+{
+	uint8_t tData;
+
+	if(_display_data_order_active == true)
+	{	tData = _data_from_keypad_IRQ;
+
+		switch (tData)
+		{
+		case KEYCODE_11: // Keypad 11
+			Ref_LCD_application.ClearDisplayData();
+			Ref_LCD_application.PrintStr("RED", 3, 0, 0);
+			Ref_LCD_application.PrintStr("BLU", 3, 0, 1);
+			break;
+
+		case KEYCODE_12: // Keypad 12
+			Ref_LCD_application.ReturnCursorHome();
+			break;
+
+		case KEYCODE_13: // Keypad 13
+			Ref_LCD_application.PrintStr("Ticket 1", 8, LCD_APP_ROW_START, 0);
+			break;
+
+		case KEYCODE_14: // Keypad 14
+			Ref_LCD_application.PrintStr("Ticket 2", 8, LCD_APP_ROW_START, 1);
+			break;
+
+		default:
+			break;
+		}
+		_display_data_order_active = false;
+	}
+	else{;}
+}
+//==================================================================================================================
+
+/*******************************************************************************************************************
+ * @name		IRQ_TIM1_Display
+ * @brief		Cyclical data incrementation for: Display_App_Test1, Display_App_Test2
+ * @param[in]	void
+ * @note		Data and information is taken from IRQ_TIM2_Keypad()
+ * @return		void
+ */
+void MenuApplication_4x4::IRQ_TIM1_Display(void)
 {
     static uint8_t n_TIMER1, someNum;
     switch (n_TIMER1)
@@ -59,28 +198,31 @@ void MenuApplication::IRQ_TIM1_Display(void)
 		break;
 	}
 }
-//====================================================================================================
+//==================================================================================================================
 
-/*****************************************************************************************************
+/*******************************************************************************************************************
  * @name		IRQ_TIM2_Keypad
- * @brief		void
+ * @brief		Cyclical keypad scan for key press
  * @param[in]	void
- * @note		void
+ * @note		Key cyclical scan in IRQ interrupt for timer 2
  * @return		void
  */
-void MenuApplication::IRQ_TIM2_Keypad(void)
+void MenuApplication_4x4::IRQ_TIM2_Keypad(void)
 {
 	_keypad_state = RefKeypad4x4.KeypadStateEvaluation();
 	if(_keypad_state != KEYCODE_NOPRESS)
-	{
+	{	
 		if(_keypad_state == KEYPAD_KEYPAD_STATE_PULS)
-		{	Ref_LCD_application.OrderDisplay_IRQ(RefKeypad4x4.GetKeyCode()); }
+		{	
+			//Ref_LCD_application.OrderDisplay_IRQ(RefKeypad4x4.GetKeyCode()); 
+			DisplaySetOrder(RefKeypad4x4.GetKeyCode());
+		}
 		else{;}
 	}
 	else{;}
 }
-//====================================================================================================
+//==================================================================================================================
 
-//====================================================================================================
+//==================================================================================================================
 #endif // _INC_x01_MENU_H
-//====================================================================================================
+//==================================================================================================================

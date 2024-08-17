@@ -19,7 +19,9 @@
 #define LCD_APP_ROW_START 0x05U
 #define LCD_APP_TICKET_ACTIVE_RED (char)('R')
 #define LCD_APP_TICKET_ACTIVE_BLU (char)('B')
-enum enum_TicketsTeamActive{TICKET_ACTIVE_NONE, TICKET_ACTIVE_RED = LCD_APP_TICKET_ACTIVE_RED, TICKET_ACTIVE_BLU = LCD_APP_TICKET_ACTIVE_BLU};
+enum enum_TicketsTeamActive{TICKET_ACTIVE_NONE, 
+TICKET_ACTIVE_RED = LCD_APP_TICKET_ACTIVE_RED, 
+TICKET_ACTIVE_BLU = LCD_APP_TICKET_ACTIVE_BLU};
 //====================================================================================================
 
 /*****************************************************************************************************
@@ -51,19 +53,19 @@ public:
     void PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
     
+    void Order_PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void Order_PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void Execute_PrintStr(void);
 //============================================================================================
 
 //============================================================================================
 // Definitions for print string data 
-    void PrintInt(uint8_t number, uint8_t strLen, uint8_t n_row, uint8_t n_col);
+    void PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col);
+    void PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col);
+
     void Order_PrintInt(uint8_t number, uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void Execute_PrintInt(void);
 //============================================================================================
-
-    void MenuTest(void);
-    void MenuTwoTeamsIncrease(void);
 };
 //====================================================================================================
 #endif // _INC_LCD_APPLICATION
