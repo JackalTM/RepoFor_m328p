@@ -8,26 +8,6 @@
 #ifdef _INC_x01_MENU_H
 
 /*******************************************************************************************************************
- * @name		DisplaySetOrder
- * @brief		void
- * @param[in]	inData Data from keypad to display
- * @note		void
- * @return		void
- */
- bool MenuApplication_4x4::DisplaySetOrder(uint8_t inData)
- {
-	if(_display_data_order_active == false)
-	{
-		_data_from_keypad_IRQ = inData;
-		_display_data_order_active = true;
-		return true;
-	}
-	else
-	{	return false; }
- }
-//==================================================================================================================
-
-/*******************************************************************************************************************
  * @name		InitializeDisplay_AppTest1
  * @brief		Prepare LCD display data for Display_App_Test1
  * @param[in]	void
@@ -201,6 +181,26 @@ void MenuApplication_4x4::IRQ_TIM1_Display(void)
 //==================================================================================================================
 
 /*******************************************************************************************************************
+ * @name		DisplaySetOrder
+ * @brief		Data is saved from cyclical and presed keypad IRQ 
+ * @param[in]	inData Data from keypad to display
+ * @note		void
+ * @return		void
+ */
+ bool MenuApplication_4x4::KeypadButtonData(uint8_t inData)
+ {
+	if(_display_data_order_active == false)
+	{
+		_data_from_keypad_IRQ = inData;
+		_display_data_order_active = true;
+		return true;
+	}
+	else
+	{	return false; }
+ }
+//==================================================================================================================
+
+/*******************************************************************************************************************
  * @name		IRQ_TIM2_Keypad
  * @brief		Cyclical keypad scan for key press
  * @param[in]	void
@@ -214,8 +214,7 @@ void MenuApplication_4x4::IRQ_TIM2_Keypad(void)
 	{	
 		if(_keypad_state == KEYPAD_KEYPAD_STATE_PULS)
 		{	
-			//Ref_LCD_application.OrderDisplay_IRQ(RefKeypad4x4.GetKeyCode()); 
-			DisplaySetOrder(RefKeypad4x4.GetKeyCode());
+			KeypadButtonData(RefKeypad4x4.GetKeyCode());
 		}
 		else{;}
 	}

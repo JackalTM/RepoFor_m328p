@@ -9,10 +9,11 @@
 */
 InitPeryferia_m328p 	myInitialization_uC;
 LCD_application 		myLCD_app(16,2);
-//ConvertTime				myTime;
-Keypad4x4 				instKeyPad(0x07);
+Keypad4x4 				myKeyPad4x4(0x07);
+KeyPad1x4				myKeyPad1x4(0x07);
 
-MenuApplication			myMenuApplication(myLCD_app, instKeyPad);
+MenuApplication_4x4		myMenuApp_4x4(myLCD_app, myKeyPad4x4);
+//MenuApplication_1x4		myMenuApp_1x4(myLCD_app, myKeyPad1x4);
 //=========================================================================
 
 /**************************************************************************
@@ -20,26 +21,23 @@ MenuApplication			myMenuApplication(myLCD_app, instKeyPad);
 */
 //volatile uint8_t globalKeypadState;
 //=========================================================================
-
 int main(void)
 {
 	myInitialization_uC.DataDirectionsResistrsInit();	// Inicializacja Port�w
-	myInitialization_uC.Timer1Init();	// Inicializacja TIMER2
-	myInitialization_uC.Timer2Init();	// Inicializacja TIMER2
+	myInitialization_uC.Timer1Init();	// Inicializacja TIMER1 16 bit, szczegóły w definicji klasy
+	myInitialization_uC.Timer2Init();	// Inicializacja TIMER2 8 bit
 
 // Inicializacja wyswetlacza LCD, zajmje przynajmniej 40ms
-myLCD_app.InitializeDevice();
+	myLCD_app.InitializeDevice();
 //============================================================================
 
-// Miejsce na inicializacje danych pod wstępnej inicializacji 
-	myLCD_app.PrintStr("RED:", 3, 0,0);
-	myLCD_app.PrintStr("BLU:", 3, 0,1);
-while(1)
-{
-	//myLCD_app.MenuTwoTeamsIncrease();
-	;
-}
-return 0;
+// Miejsce na wyswitlanie danych pod wstępnej inicializacji 
+	myMenuApp_4x4.InitializeDisplay_AppTest1();
+	while(1)
+	{
+		myMenuApp_4x4.Display_App_Test1();
+	}
+	return 0;
 }
 //=============================================================================
 
@@ -48,7 +46,8 @@ return 0;
 */
 ISR(TIMER1_OVF_vect)
 {
-	myMenuApplication.IRQ_TIM1_Display();
+	//myMenuApp_4x4.IRQ_TIM1_Display();
+	;
 }
 //=============================================================================
 
@@ -57,16 +56,6 @@ ISR(TIMER1_OVF_vect)
 */
 ISR(TIMER2_OVF_vect)
 { 
-/*
-	globalKeypadState = instKeyPad.KeypadStateEvaluation();
-	if(globalKeypadState != KEYCODE_NOPRESS)
-	{
-		if(globalKeypadState == KEYPAD_KEYPAD_STATE_PULS)
-		{	myLCD_app.OrderDisplay_IRQ(instKeyPad.GetKeyCode()); }
-		else{;}
-	}
-	else{;}
-*/
-	myMenuApplication.IRQ_TIM2_Keypad();
+	myMenuApp_4x4.IRQ_TIM2_Keypad();
 }
 //=============================================================================

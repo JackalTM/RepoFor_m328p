@@ -252,7 +252,7 @@ void ConvertTime::NumToString(uint8_t number, char arrChar[], HexadeciNumberStri
  * @param[in]	arrDST Pointer to destination array 
  * @param[in]	lenDST Lenght of destination array 
  * 
- * @note		  Input lenght ned to be widhout '\0' marker on the end
+ * @note		  Input lenght need to be widhout '\0' marker on the end
  *            This string is formating specyfic
  * @return		void
  */
@@ -294,7 +294,7 @@ void ConvertTime::ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], u
  * @param[in]	arrDST Pointer to destination array 
  * @param[in]	lenDST Lenght of destination array 
  * 
- * @note		  Input lenght ned to be widhout '\0' marker on the end
+ * @note		  Input lenght need to be widhout '\0' marker on the end
  *            This string is formating specyfic
  * @return		void
  */

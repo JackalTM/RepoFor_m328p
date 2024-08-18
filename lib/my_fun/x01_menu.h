@@ -57,8 +57,6 @@ public:
         Ref_LCD_application(Ref_LCD_application), RefKeypad4x4(RefKeypad4x4){;}
     ~MenuApplication_4x4(){;}
 //==============================================
-    bool DisplaySetOrder(uint8_t inData);
-
     void InitializeDisplay_AppTest1(void);
     void Display_App_Test1(void);
 
@@ -66,6 +64,8 @@ public:
     void Display_App_Test2(void);
     
     void IRQ_TIM1_Display(void);
+
+    bool KeypadButtonData(uint8_t inData);
     void IRQ_TIM2_Keypad(void);
 //==============================================
 };
