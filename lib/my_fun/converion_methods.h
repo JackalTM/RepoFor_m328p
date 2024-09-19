@@ -43,6 +43,20 @@ struct NumberStrSize_t
     };
 }; // https://en.cppreference.com/w/cpp/language/enum
 
+typedef struct 
+{
+    uint16_t hour;
+    uint16_t minute;
+    uint16_t second;
+}mytime_t;
+
+typedef struct 
+{
+    uint8_t year;
+    uint8_t month;
+    uint8_t day;
+}mydata_t;
+
 
 /*****************************************************************************************************
  * @name		NumbersConversion
@@ -94,6 +108,7 @@ public:
 #define CONVERSION_BASE_NUM_LETER_MAX (char)'Z'
 
 #define TIME_CONVERSION_NUMBER_BASEBNUM 0x40
+//====================================================================================================
 
 /*****************************************************************************************************
  * @name		ConvertTime
@@ -114,6 +129,12 @@ public:
 
     void GetTimeString(char pChar[]);
     void IncBySecAmount(uint16_t nSec);
+
+    mytime_t From_ms_to_time(uint32_t ms);
+    mytime_t From_sec_to_time(uint32_t sec);
+
+    uint32_t From_time_to_ms(const mytime_t *pTime);
+    uint32_t From_time_to_sec(const mytime_t *pTime);
 
     void SetCharArray(char arrChar[], uint8_t strLen, char inChar);
 

@@ -187,6 +187,81 @@ void ConvertTime::IncBySecAmount(uint16_t nSec)
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		  From_ms_to_time
+ * @brief		  Convert to structure mytime_t from misecond amount
+ * @param[in]	ms Milisecond amount
+ * @note		  void
+ * @return		Time in format mytime_t
+ */
+mytime_t ConvertTime::From_ms_to_time(uint32_t ms)
+{
+  mytime_t tTime;
+
+  tTime.hour = ms / 360000;
+  ms = ms - (tTime.hour * 360000);
+
+  tTime.minute = ms / 6000;
+  ms = ms - (tTime.minute * 6000);
+
+  tTime.second = ms / 100;
+  ms = ms - (tTime.second * 100);
+
+  ms = ms;
+
+  return tTime;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		  From_ms_to_time
+ * @brief		  Convert to structure time_t from misecond amount
+ * @param[in]	ms Milisecond amount
+ * @note		  void
+ * @return		Time in format mytime_t
+ */
+mytime_t ConvertTime::From_sec_to_time(uint32_t sec)
+{
+  mytime_t tTime;
+
+  tTime.hour = sec / 3600;
+  sec = sec - (tTime.hour * 3600);
+
+  tTime.minute = sec / 60;
+  sec = sec - (tTime.minute * 60);
+
+  tTime.second = sec;
+
+  return tTime;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		  From_time_to_ms
+ * @brief		  Conversion from time format to miliseconds amount
+ * @param[in]	pTime Constant pointer to time structure data
+ * @note		  void
+ * @return		Amount of miliseconds
+ */
+uint32_t From_time_to_ms(const mytime_t *pTime)
+{
+  return ((pTime->hour * 360000) + (pTime->minute * 6000) + (pTime->second * 100));
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		  From_time_to_sec
+ * @brief		  Conversion from time format to seconds amount
+ * @param[in]	pTime Constant pointer to time structure data
+ * @note		  void
+ * @return		Amount of seconds
+ */
+uint32_t From_time_to_sec(const mytime_t *pTime)
+{
+  return ((pTime->hour * 3600) + (pTime->minute * 60) + (pTime->second));
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		  SetCharArray
  * @brief		  Fill array with input character 
  * @param[in]	arrChar Pointer to character array to fill with.

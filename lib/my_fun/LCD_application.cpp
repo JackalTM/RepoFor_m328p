@@ -35,7 +35,7 @@ LCD_application::LCD_application(uint8_t row_n, uint8_t col_n):
  * @name		LCD_application: LCD_DataControl, LCD_016N002B_CFH_ET
  * @brief		Deconstructor for class LCD_application: LCD_DataControl, LCD_016N002B_CFH_ET
  * @param[in]	void
- * @note		void
+ * @note		In this situation is empty
  * @return		void
  */
 LCD_application::~LCD_application(){;}

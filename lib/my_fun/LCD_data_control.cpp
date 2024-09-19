@@ -41,7 +41,7 @@ LCD_DataControl::~LCD_DataControl(){;}
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		_PutData
+ * @name		_PutDataBuffer
  * @brief		void
  * @param[in]	data Input data 
  * @note		void
@@ -71,7 +71,7 @@ LCD_DataControl::~LCD_DataControl(){;}
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		_ClearData
+ * @name		ClearData
  * @brief		Clear LCD data buffer 
  * @param[in]	void
  * @note		void
@@ -90,7 +90,7 @@ void LCD_DataControl::ClearData(void)
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		_ReturnHome
+ * @name		ReturnHome
  * @brief		Return cursor to start position
  * @param[in]	void
  * @note		void
@@ -103,7 +103,7 @@ void LCD_DataControl::ReturnHome(void)
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		CursorCurrentLoc
+ * @name		AmountCharsToBegin
  * @brief		Gets amout of characters from current cursor place to begin of LCD
  * @param[in]	void
  * @note		
@@ -116,7 +116,7 @@ uint8_t LCD_DataControl::AmountCharsToBegin(void)
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		CursorSpaceToEnd
+ * @name		AmountCharsToEnd
  * @brief		Gets amout of characters from current cursor place end of LCD
  * @param[in]	void
  * @note		

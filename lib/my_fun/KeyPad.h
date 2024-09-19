@@ -71,7 +71,7 @@ typedef struct
 #define KEYCODE_14 (char)'E'
 #define KEYCODE_15 (char)'F'
 #endif // KEYPAD_KEYDEF_ASCI
-//==============================================================================================
+//==================================================================================================================
 
 /*******************************************************************************************************************
  * Definitions for certain  PORT output data
@@ -125,6 +125,17 @@ enum outputColumn_enum {COLUMN_1 = 0, COLUMN_2 = 1, COLUMN_3 = 2, COLUMN_4 = 3};
 #define KEYPAD_DEBOUNCE_STATE_NOPRESS   KEYPAD_CODE_PINx_NOPR
 
 #define KEYPAD_KEYPAD_STATE_PULS        KEYPAD_DEBOUNCE_x22_RISING_EDGE     
+
+enum enum_KEYPAD_DB_STATE_t
+{
+    KEY_STATE_Ini = KEYPAD_DEBOUNCE_x00_INIT,
+    KEY_STATE_Relised = KEYPAD_DEBOUNCE_x11_STABLE_OFF,
+    KEY_STATE_RisingEdge = KEYPAD_DEBOUNCE_x22_RISING_EDGE,
+    KEY_STATE_DebounceOn = KEYPAD_DEBOUNCE_x33_DB_OFFON,
+    KEY_STATE_Presed = KEYPAD_DEBOUNCE_x44_STABLE_ON,
+    KEY_STATE_FallingEdge = KEYPAD_DEBOUNCE_x55_FALLING_EDGE,
+    KEY_STATE_DebounceOff = KEYPAD_DEBOUNCE_x66_DB_ONOFF
+};
 //==============================================================================================
 
 /*******************************************************************************************************************
