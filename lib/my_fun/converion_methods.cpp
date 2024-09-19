@@ -242,7 +242,7 @@ mytime_t ConvertTime::From_sec_to_time(uint32_t sec)
  * @note		  void
  * @return		Amount of miliseconds
  */
-uint32_t From_time_to_ms(const mytime_t *pTime)
+uint32_t ConvertTime::From_time_to_ms(const mytime_t *pTime)
 {
   return ((pTime->hour * 360000) + (pTime->minute * 6000) + (pTime->second * 100));
 }
@@ -255,7 +255,7 @@ uint32_t From_time_to_ms(const mytime_t *pTime)
  * @note		  void
  * @return		Amount of seconds
  */
-uint32_t From_time_to_sec(const mytime_t *pTime)
+uint32_t ConvertTime::From_time_to_sec(const mytime_t *pTime)
 {
   return ((pTime->hour * 3600) + (pTime->minute * 60) + (pTime->second));
 }
