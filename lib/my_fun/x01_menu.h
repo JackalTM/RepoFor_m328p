@@ -8,6 +8,7 @@
 #ifdef _INC_x01_MENU_H
 
 #include "LCD_application.h"
+#include "convert_data_and_time.h"
 
 /********************************************************************************************************************
  * Display value constants
@@ -40,9 +41,13 @@ private:
     LCD_application&    Ref_LCD_application;
     //ConvertTime&        RefConvertTime;
     Keypad4x4&          RefKeypad4x4;
+
+    myTime::mytime_t    _time;
+    uint32_t miliSec;
 //==============================================
     char arrChars1[4];
     char arrChars2[4];
+
     volatile uint8_t _keypad_state;
     volatile bool _display_data_order_active;
     volatile uint8_t _data_from_keypad_IRQ;
@@ -57,14 +62,18 @@ public:
         Ref_LCD_application(Ref_LCD_application), RefKeypad4x4(RefKeypad4x4){;}
     ~MenuApplication_4x4(){;}
 //==============================================
+    // Menu display menagment
     void InitializeDisplay_AppTest1(void);
     void Display_App_Test1(void);
-
+    // Menu display menagment
     void InitializeDisplay_AppTest2(void);
     void Display_App_Test2(void);
     
+    // Call for Timer 1 interrupt
+    void IRQ_TIM1_AddMilisecondsAmount(uint16_t ms);
     void IRQ_TIM1_Display(void);
 
+    // Call for Timer 2 interrupt
     bool KeypadButtonData(uint8_t inData);
     void IRQ_TIM2_Keypad(void);
 //==============================================

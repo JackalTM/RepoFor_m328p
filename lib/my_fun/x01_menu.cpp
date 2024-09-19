@@ -140,6 +140,22 @@ void MenuApplication_4x4::Display_App_Test2(void)
 //==================================================================================================================
 
 /*******************************************************************************************************************
+ * @name		IRQ_TIM1_AddSecondsAmount
+ * @brief		Increase time by seconds amount
+ * @param[in]	sec Amount of seconds to increase
+ * 		
+ */
+void MenuApplication_4x4::IRQ_TIM1_AddMilisecondsAmount(uint16_t ms)
+{
+	miliSec = miliSec + ms;
+
+	myTime::mytime_t tTime = myTime::From_ms_to_time(miliSec);
+	_time.hour 	 = _time.hour + tTime.hour;
+	_time.minute = _time.minute + tTime.minute;
+	_time.second = _time.second + tTime.second;
+}
+
+/*******************************************************************************************************************
  * @name		IRQ_TIM1_Display
  * @brief		Cyclical data incrementation for: Display_App_Test1, Display_App_Test2
  * @param[in]	void

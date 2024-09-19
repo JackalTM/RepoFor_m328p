@@ -32,7 +32,7 @@ TICKET_ACTIVE_BLU = LCD_APP_TICKET_ACTIVE_BLU};
 class LCD_application: private LCD_DataControl, LCD_016N002B_CFH_ET
 {
 private:
-    ConvertTime _Convert;
+    FormatConvert _Convert;
     uint8_t row_n, col_n;
     volatile bool _data_from_keypad_IRQ, _display_data_order_active;
     volatile uint8_t _strLen, _n_row, _n_col;
@@ -68,9 +68,6 @@ public:
     void Execute_PrintInt(void);
 //============================================================================================
 
-//============================================================================================
-// Definitions for display template
-    void Template_Data(const char arrString[6], uint8_t strlen);
 //============================================================================================
 };
 //====================================================================================================

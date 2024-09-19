@@ -122,143 +122,17 @@ char* NumbersConversion::itoa_simple(char *dest, int i)
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		ConvertTime
+ * @name		FormatConvert
  * @brief		Constructor
  */
-ConvertTime::ConvertTime(void)
-{
-  _hour[0] = 0;   _hour[1] = 0;
-  _min[0] = 0;    _min[1] = 0;
-  _sec[0] = 0;    _sec[1] = 0;
-}
+FormatConvert::FormatConvert(void){;}
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		~ConvertTime
+ * @name		~FormatConvert
  * @brief		Deconstructor
  */
-ConvertTime::~ConvertTime(){;}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  GetTimeString
- * @brief		  Asign whole string 
- * @param[in]	pChar Pointer to char array 
- * @note		  void
- * @return		void
- */
-void ConvertTime::GetTimeString(char pChar[])
-{
-    pChar[0] = _hour[0];    
-    pChar[1] = _hour[1];
-    pChar[2] = ':';
-    pChar[3] = _min[0];    
-    pChar[4] = _min[1];
-    pChar[5] = ':';
-    pChar[6] = _sec[0];     
-    pChar[7] = _sec[1];
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  IncBySec
- * @brief		  Increase time by one second
- * @param[in]	void
- * @note		  void
- * @return		void
- */
-void ConvertTime::IncBySecAmount(uint16_t nSec)
-{
-  seconds++;
-  if(seconds> 59)
-  {
-    seconds = 0;
-    minutes++;
-  }
-  else{;}
-
-  if(minutes > 59)
-  {
-    minutes = 0;
-    hours++;
-  }
-  else{;}
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  From_ms_to_time
- * @brief		  Convert to structure mytime_t from misecond amount
- * @param[in]	ms Milisecond amount
- * @note		  void
- * @return		Time in format mytime_t
- */
-mytime_t ConvertTime::From_ms_to_time(uint32_t ms)
-{
-  mytime_t tTime;
-
-  tTime.hour = ms / 360000;
-  ms = ms - (tTime.hour * 360000);
-
-  tTime.minute = ms / 6000;
-  ms = ms - (tTime.minute * 6000);
-
-  tTime.second = ms / 100;
-  ms = ms - (tTime.second * 100);
-
-  ms = ms;
-
-  return tTime;
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  From_ms_to_time
- * @brief		  Convert to structure time_t from misecond amount
- * @param[in]	ms Milisecond amount
- * @note		  void
- * @return		Time in format mytime_t
- */
-mytime_t ConvertTime::From_sec_to_time(uint32_t sec)
-{
-  mytime_t tTime;
-
-  tTime.hour = sec / 3600;
-  sec = sec - (tTime.hour * 3600);
-
-  tTime.minute = sec / 60;
-  sec = sec - (tTime.minute * 60);
-
-  tTime.second = sec;
-
-  return tTime;
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  From_time_to_ms
- * @brief		  Conversion from time format to miliseconds amount
- * @param[in]	pTime Constant pointer to time structure data
- * @note		  void
- * @return		Amount of miliseconds
- */
-uint32_t ConvertTime::From_time_to_ms(const mytime_t *pTime)
-{
-  return ((pTime->hour * 360000) + (pTime->minute * 6000) + (pTime->second * 100));
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  From_time_to_sec
- * @brief		  Conversion from time format to seconds amount
- * @param[in]	pTime Constant pointer to time structure data
- * @note		  void
- * @return		Amount of seconds
- */
-uint32_t ConvertTime::From_time_to_sec(const mytime_t *pTime)
-{
-  return ((pTime->hour * 3600) + (pTime->minute * 60) + (pTime->second));
-}
+FormatConvert::~FormatConvert(){;}
 //====================================================================================================
 
 /*****************************************************************************************************
@@ -270,7 +144,7 @@ uint32_t ConvertTime::From_time_to_sec(const mytime_t *pTime)
  * @note		  void
  * @return		void
  */
-void ConvertTime::SetCharArray(char arrChar[], uint8_t strLen, char inChar)
+void FormatConvert::_SetCharArray(char arrChar[], uint8_t strLen, char inChar)
 {
   uint8_t i;
   for(i=0; i<strLen; i++)
@@ -291,9 +165,9 @@ void ConvertTime::SetCharArray(char arrChar[], uint8_t strLen, char inChar)
  * @note		void
  * @return	void
  */
-void ConvertTime::NumToString(uint8_t number, char arrChar[], DecimalNumberStringSize strSize)
+void FormatConvert::NumToString(uint8_t number, char arrChar[], DecimalNumberStringSize strSize)
 {
-  SetCharArray(arrChar, strSize, '\0');
+  _SetCharArray(arrChar, strSize, '\0');
   NumbersConversion::SetMaxStringLenght(strSize);
   *(NumbersConversion::Uint_to_str_dec(arrChar, number))  = '\0';
 }
@@ -310,9 +184,9 @@ void ConvertTime::NumToString(uint8_t number, char arrChar[], DecimalNumberStrin
  * @note		void
  * @return	void
  */
-void ConvertTime::NumToString(uint8_t number, char arrChar[], HexadeciNumberStringSize strSize)
+void FormatConvert::NumToString(uint8_t number, char arrChar[], HexadeciNumberStringSize strSize)
 {
-  SetCharArray(arrChar, strSize, '\0');
+  _SetCharArray(arrChar, strSize, '\0');
   NumbersConversion::SetMaxStringLenght(strSize);
   *(NumbersConversion::Uint_to_str_hex(arrChar, number))  = '\0';
 }
@@ -332,7 +206,7 @@ void ConvertTime::NumToString(uint8_t number, char arrChar[], HexadeciNumberStri
  * @return		void
  */
 
-void ConvertTime::ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST)
+void FormatConvert::ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST)
 {
   uint8_t i, j;
   char tChar;
@@ -374,7 +248,7 @@ void ConvertTime::ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], u
  * @return		void
  */
 
-void ConvertTime::ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST)
+void FormatConvert::ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST)
 {
   uint8_t i, j;
   char tChar;

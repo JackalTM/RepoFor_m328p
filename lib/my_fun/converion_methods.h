@@ -43,21 +43,6 @@ struct NumberStrSize_t
     };
 }; // https://en.cppreference.com/w/cpp/language/enum
 
-typedef struct 
-{
-    uint16_t hour;
-    uint16_t minute;
-    uint16_t second;
-}mytime_t;
-
-typedef struct 
-{
-    uint8_t year;
-    uint8_t month;
-    uint8_t day;
-}mydata_t;
-
-
 /*****************************************************************************************************
  * @name		NumbersConversion
  * @brief		Clas to convert nmbers system
@@ -114,29 +99,14 @@ public:
  * @name		ConvertTime
  * @brief		Clas to convert nmbers system
  */
-class ConvertTime: private NumbersConversion
+class FormatConvert: private NumbersConversion
 {
 private:
-    // HH-MM-SS
-    uint8_t hours, minutes, seconds, _index;
-    char _hour[3];
-    char _min[3];
-    char _sec[3];
+    void _SetCharArray(char arrChar[], uint8_t strLen, char inChar);
 
 public:
-    ConvertTime(void);
-    ~ConvertTime();
-
-    void GetTimeString(char pChar[]);
-    void IncBySecAmount(uint16_t nSec);
-
-    mytime_t From_ms_to_time(uint32_t ms);
-    mytime_t From_sec_to_time(uint32_t sec);
-
-    uint32_t From_time_to_ms(const mytime_t *pTime);
-    uint32_t From_time_to_sec(const mytime_t *pTime);
-
-    void SetCharArray(char arrChar[], uint8_t strLen, char inChar);
+    FormatConvert(void);
+    ~FormatConvert();
 
     // Conversion methods 
     void NumToString(uint8_t number, char arrChar[], DecimalNumberStringSize strSize);
