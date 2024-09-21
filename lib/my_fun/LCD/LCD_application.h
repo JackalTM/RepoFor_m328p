@@ -8,10 +8,10 @@
 #ifdef _INC_LCD_APPLICATION
 
 #include "string.h"
-#include "LCD_data_control.h"
-#include "LCD_016N002B_CFH_ET.h"
-#include "converion_methods.h"
-#include "KeyPad.h"
+#include "LCD_data_control/LCD_data_control.h"
+#include "LCD_016N0028_CFH_ET/LCD_016N002B_CFH_ET.h"
+#include "Data_conversion/converion_methods.h"
+//#include "KeyPad.h"
 
 /*****************************************************************************************************
  * Global data definitions

@@ -3,7 +3,7 @@
 
 #include "stdint.h"
 
-namespace myTime{
+namespace data_time{
 //============================================================================= 
 typedef struct 
 {
@@ -26,12 +26,7 @@ mytime_t From_sec_to_time(uint32_t sec);
 // Conversion from time structure to seconds amount
 uint32_t From_time_to_ms(const mytime_t *pTime);
 uint32_t From_time_to_sec(const mytime_t *pTime);
-
-void IncreaseTime(uint8_t hour, uint8_t minute, uint8_t sec, uint16_t ms);
-void IncreaseTime(const mytime_t* pTime);
-mytime_t GetTime(void);
 //=============================================================================
 } // namespace myTime
-
 
 #endif // _INC_CONVERT_DATA_AND_TIME

@@ -1,11 +1,11 @@
 /*
- * InteruptInit.h
+ * Init_328p.h
  *
  * Created: 13.12.2020 13:08:33
  *  Author: Wiki
  */ 
 #include "_include.h"
-#ifdef _INC_INIT
+#ifdef _INC_INIT_328P
 /**********************************************************
  * 
 */
@@ -14,7 +14,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "bit_mask_macros.h"
+#include "Global_macros/bit_mask_macros.h"
 
 //========================================================================================================================================================
 // PORTD masks

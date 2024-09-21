@@ -12,7 +12,7 @@
 
 #include "stdint.h"
 #include <avr/io.h>
-#include "bit_mask_macros.h"
+#include "Global_macros/bit_mask_macros.h"
 
 //#define KEYPAD_KEYDEF_AMOUNT
 #define KEYPAD_KEYDEF_ASCI

@@ -7,8 +7,9 @@
 #include "_include.h"
 #ifdef _INC_x01_MENU_H
 
-#include "LCD_application.h"
-#include "convert_data_and_time.h"
+#include "KeyPad/KeyPad.h"
+#include "LCD/LCD_application.h"
+#include "Data_conversion/convert_data_and_time.h"
 
 /********************************************************************************************************************
  * Display value constants
@@ -42,7 +43,7 @@ private:
     //ConvertTime&        RefConvertTime;
     Keypad4x4&          RefKeypad4x4;
 
-    myTime::mytime_t    _time;
+    data_time::mytime_t    _time;
     uint32_t miliSec;
 //==============================================
     char arrChars1[4];

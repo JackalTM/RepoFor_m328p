@@ -8,7 +8,7 @@
 #ifdef _INC_CONVERSION_METHODS
 
 #include "stdint.h"
-#include "bit_mask_macros.h"
+#include "Global_macros/bit_mask_macros.h"
 
 #define CONVERSION_TYPE_DEC_uint8_t 4U
 #define CONVERSION_TYPE_DEC_uint16_t 6U

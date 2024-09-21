@@ -4,8 +4,8 @@
  * Created: 13.12.2020 13:10:28
  *  Author: TAPZawadzki
  */ 
-#include "Init.h"
-#ifdef _INC_INIT
+#include "Init_328p.h"
+#ifdef _INC_INIT_328P
 /*******************************************************************************************************************
  * 
 */
@@ -193,7 +193,7 @@ void InitPeryferia_m328p::Timer2Init_WaveformGeneration(void)
 void InitPeryferia_m328p::Timer1Init(void)
 {
 	// Configuration of timers interrupts
-	TCCR1A = TCCR1A & 0x0F;
+	TCCR1A = TCCR1A & 0x0F; // TC1 Control Register A
 	TIMSK1 = TIMSK1 | 0x01;
 
 	if(_sei_set == false) 
