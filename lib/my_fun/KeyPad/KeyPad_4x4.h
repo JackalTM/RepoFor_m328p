@@ -5,7 +5,7 @@
  *  Author: 
  */ 
 #include "_include.h"
-#ifdef _INC_KEYPAD
+#ifdef _INC_KEYPAD_4x4
 
 #ifndef KEYPAD_H_
 #define KEYPAD_H_
@@ -84,6 +84,7 @@ typedef struct
 #define KEYPAD1x4_ARRAY_AMOUNT_MAX_N   (uint8_t)0x04 // Maximum elements amont 
 #define KEYPAD1x4_ARRAY_AMOUNT_ROW     (uint8_t)0x01 // Maximum elements in row array 
 #define KEYPAD1x4_ARRAY_AMOUNT_COL     (uint8_t)0x04 // Maximum elements in col array 
+//-----------------------------------------------------------------------------------
 
 // MAcros for PORT and PIB states
 #ifdef KEYPAD_ACTIVE_STATE_LOW
@@ -101,6 +102,7 @@ typedef struct
     #define KEYPAD_CODE_PINx_NOPR   (uint8_t)0x3C // 0b 0011 1100
 
 #endif // KEYPAD_ACTIVE_STATE_LOW
+//-----------------------------------------------------------------------------------
 
 // Port mask macro
 #define KEYPAD_CODE_PORTx_MASK      (uint8_t)0x0F // Mask for output port valid data
@@ -123,6 +125,7 @@ enum outputColumn_enum {COLUMN_1 = 0, COLUMN_2 = 1, COLUMN_3 = 2, COLUMN_4 = 3};
 #define KEYPAD_DEBOUNCE_x55_FALLING_EDGE (uint8_t)0x55 // Falling edge on state
 #define KEYPAD_DEBOUNCE_x66_DB_ONOFF    (uint8_t)0x66 // Debounce from high to low
 #define KEYPAD_DEBOUNCE_STATE_NOPRESS   KEYPAD_CODE_PINx_NOPR
+//-----------------------------------------------------------------------------------
 
 #define KEYPAD_KEYPAD_STATE_PULS        KEYPAD_DEBOUNCE_x22_RISING_EDGE     
 
@@ -185,46 +188,6 @@ public:
 
     uint8_t SetOutputPort(uint8_t* pColumn);    
     uint8_t DecodeKeyCode(uint8_t inPORT, uint8_t inPIN);
-    uint8_t PadDebounce(uint8_t* pDebounce, uint8_t* pCounter, uint8_t inState);
-
-    uint8_t KeypadStateEvaluation(void);
-    uint8_t GetKeyCode(void);
-};
-//==================================================================================================================
-
-/*******************************************************************************************************************
- * Class for menage keypad 1x4
-*/
-class KeyPad1x4
-{
-private:
-/***********************************************************************************************
- * Definitions for private class varibales 
-*/
-uint8_t irq_n, _colnum, _PINx;
-uint8_t _keydecoded, _keystate;
-uint8_t arrDebounce[KEYPAD1x4_ARRAY_AMOUNT_ROW];
-uint8_t arrCounter[KEYPAD1x4_ARRAY_AMOUNT_ROW];
-
-const uint8_t arrayPortOutNegative[KEYPAD1x4_ARRAY_AMOUNT_MAX_N] = 
-{   KEYPAD_CODE_PORTx_01_N, KEYPAD_CODE_PORTx_02_N, 
-    KEYPAD_CODE_PORTx_03_N, KEYPAD_CODE_PORTx_04_N};
-
-const uint8_t arrKeys2D[KEYPAD1x4_ARRAY_AMOUNT_ROW][KEYPAD1x4_ARRAY_AMOUNT_COL] =
-{   {KEYCODE_01, KEYCODE_02, KEYCODE_03, KEYCODE_04}};
-
-/***********************************************************************************************
- * Definitions for debounce state on keypad
-*/
-uint8_t _DEBOUNCE_AMOUNT;
-volatile uint8_t keyCode;
-volatile uint8_t keyState;
-//==============================================================================================
-public:
-    KeyPad1x4(uint8_t dbAmount);
-    ~KeyPad1x4(void);
-   
-    uint8_t DecodeKeyCode(uint8_t inPIN);
     uint8_t PadDebounce(uint8_t* pDebounce, uint8_t* pCounter, uint8_t inState);
 
     uint8_t KeypadStateEvaluation(void);

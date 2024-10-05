@@ -36,8 +36,13 @@ private:
     uint8_t row_n, col_n;
     volatile bool _data_from_keypad_IRQ, _display_data_order_active;
     volatile uint8_t _strLen, _n_row, _n_col;
-    char _arrBuffer[8];
-
+    char _arrBuffer[16];
+//--------------------------------------------------------------------------------------------
+    void _PutChar(char c, uint8_t n_row, uint8_t n_col);
+    void _PutChar(const char *c, uint8_t n_row, uint8_t n_col);
+    void _PrintArrofChars(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
+    void _PrintArrofChars(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
+//--------------------------------------------------------------------------------------------
 public:
     LCD_application(uint8_t row_n, uint8_t col_n);
     ~LCD_application();
@@ -47,6 +52,8 @@ public:
     void ClearDisplayData(void);
     void ReturnCursorHome(void);
 //============================================================================================
+    void PutChar(char c, uint8_t n_row, uint8_t n_col);
+    void PutChar(const char *c, uint8_t n_row, uint8_t n_col);
     void Order_PrintChar(uint8_t data);
 //============================================================================================
 // Definitions for print string data 
@@ -66,6 +73,15 @@ public:
     void Order_PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col);
     void Order_PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col);
     void Execute_PrintInt(void);
+//============================================================================================
+
+//============================================================================================
+// Definitions for print time data format 
+    void PrintTime(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col); 
+    void PrintTime(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col);
+    void Order_PrintTime(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col); 
+    void Order_PrintTime(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col);
+    void Execute_PrintTime(void);
 //============================================================================================
 
 //============================================================================================

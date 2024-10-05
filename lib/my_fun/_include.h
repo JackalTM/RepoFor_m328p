@@ -5,7 +5,8 @@
 #define _INC_LCD_DATA_CONTROL
 #define _INC_LCD_016N002B_CFH_ET
 #define _INC_LCD_APPLICATION
-#define _INC_KEYPAD
+#define _INC_KEYPAD_1x4
+#define _INC_KEYPAD_4x4
 #define _INC_x01_MENU_H
 //#define _INC_x02_MENU_H
 

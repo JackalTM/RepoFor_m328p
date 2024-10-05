@@ -8,6 +8,7 @@
 #ifdef _INC_CONVERSION_METHODS
 
 #include "stdint.h"
+#include "convert_data_and_time.h"
 #include "Global_macros/bit_mask_macros.h"
 
 #define CONVERSION_TYPE_DEC_uint8_t 4U
@@ -22,6 +23,7 @@
 
 enum DecimalNumberStringSize
 {
+    TYPE_DEC_time_t = 3U,
     TYPE_DEC_uin8_t = 4U, TYPE_DEC_int8_t = 5U, 
     TYPE_DEC_uint16_t = 6U, TYPE_DEC_int16_t = 7U,
     TYPE_DEC_uint32_t = 10U, TYPE_DEC_int32_t = 11U,
@@ -115,7 +117,11 @@ public:
     // String custom formating 
     void ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST);
     void ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST);
+
+    // Time to string formating
+    void TimeToStr(data_time::time_t *pTime, char arrChar[]);
+    void TimeToStr(uint8_t hour, uint8_t minute, uint8_t second, char arrChar[]);
 };
 //====================================================================================================
-#endif // _INC_CONVERSION_METHODS
+#endif // _INC_CONVERSION_METHOD
 //====================================================================================================

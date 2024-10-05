@@ -7,6 +7,12 @@
 #include "x01_menu.h"
 #ifdef _INC_x01_MENU_H
 
+#define ROW_RED 6U
+#define ROW_BLU 6U
+
+#define COL_RED 0U
+#define COL_BLU 1U
+
 /*******************************************************************************************************************
  * @name		InitializeDisplay_AppTest1
  * @brief		Prepare LCD display data for Display_App_Test1
@@ -18,14 +24,13 @@ void MenuApplication_4x4::InitializeDisplay_AppTest1(void)
 {
 	Ref_LCD_application.ClearDisplayData();
 
-	Ref_LCD_application.PrintStr("RED", 3, 0, 0);
-	Ref_LCD_application.PrintStr("BLU", 3, 0, 1);
+	Ref_LCD_application.PrintStr("RED", 3, 0, COL_RED);
+	Ref_LCD_application.PrintStr("000", 3, ROW_RED, COL_RED);
+	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, ROW_RED, COL_RED);
 
-	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
-	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
-
-	Ref_LCD_application.PrintStr("000", 3, 8, 0);
-	Ref_LCD_application.PrintStr("000", 3, 8, 1);
+	Ref_LCD_application.PrintStr("BLU", 3, 0, COL_BLU);
+	Ref_LCD_application.PrintStr("000", 3, ROW_BLU, COL_BLU);
+	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, ROW_BLU, COL_BLU);
 
 	_ticketRedNum = 0;
 	_ticketBluNum = 0;
@@ -50,22 +55,22 @@ void MenuApplication_4x4::Display_App_Test1(void)
 		{
 		case KEYCODE_11: // Keypad 11, Increase RED tickets
 			_ticketRedNum++;
-			Ref_LCD_application.PrintInt(_ticketRedNum, 8,0);
+			Ref_LCD_application.PrintInt(_ticketRedNum, ROW_RED, COL_RED);
 			break;
 
 		case KEYCODE_12: // Keypad 12, Decrease RED tickets
 			_ticketRedNum--;
-			Ref_LCD_application.PrintInt(_ticketRedNum, 8,0);
+			Ref_LCD_application.PrintInt(_ticketRedNum, ROW_RED, COL_RED);
 			break;
 
 		case KEYCODE_13: // Keypad 13, Increase BLU tickets
 			_ticketBluNum++;
-			Ref_LCD_application.PrintInt(_ticketBluNum, 8,1);
+			Ref_LCD_application.PrintInt(_ticketBluNum, ROW_BLU, COL_BLU);
 			break;
 
 		case KEYCODE_14: // Keypad 14, Decrease BLU tickets
 			_ticketBluNum--;
-			Ref_LCD_application.PrintInt(_ticketBluNum, 8,1);
+			Ref_LCD_application.PrintInt(_ticketBluNum, ROW_BLU, COL_BLU);
 			break;
 
 		default:// Other keypad
@@ -145,14 +150,11 @@ void MenuApplication_4x4::Display_App_Test2(void)
  * @param[in]	sec Amount of seconds to increase
  * @note		Cyclical time increase in timer interrupt
  */
-void MenuApplication_4x4::IRQ_TIM1_AddMilisecondsAmount(uint16_t ms)
+void MenuApplication_4x4::IRQ_TIM1_(void)
 {
-	miliSec = miliSec + ms;
-
-	data_time::mytime_t tTime = data_time::From_ms_to_time(ms);
-	_time.hour 	 = _time.hour + tTime.hour;
-	_time.minute = _time.minute + tTime.minute;
-	_time.second = _time.second + tTime.second;
+	RefDataAndTime.IRQ_TickEvent();
+	RefDataAndTime.GetTime((data_time::time_t*)&_time);
+	Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 7, 0);
 }
 //==================================================================================================================
 
@@ -163,7 +165,7 @@ void MenuApplication_4x4::IRQ_TIM1_AddMilisecondsAmount(uint16_t ms)
  * @note		Data and information is taken from IRQ_TIM2_Keypad()
  * @return		void
  */
-void MenuApplication_4x4::IRQ_TIM1_Display(void)
+inline void MenuApplication_4x4::IRQ_TIM1_Display(void)
 {
     static uint8_t n_TIMER1, someNum;
     switch (n_TIMER1)

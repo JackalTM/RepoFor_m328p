@@ -7,9 +7,9 @@
 #include "_include.h"
 #ifdef _INC_x01_MENU_H
 
-#include "KeyPad/KeyPad.h"
+#include "KeyPad/KeyPad_4x4.h"
 #include "LCD/LCD_application.h"
-#include "Data_conversion/convert_data_and_time.h"
+#include "External_time_module/time_module.h"
 
 /********************************************************************************************************************
  * Display value constants
@@ -42,8 +42,10 @@ private:
     LCD_application&    Ref_LCD_application;
     //ConvertTime&        RefConvertTime;
     Keypad4x4&          RefKeypad4x4;
+    DataAndTime         RefDataAndTime;
+    
 
-    data_time::mytime_t    _time;
+    data_time::time_t    _time;
     uint32_t miliSec;
 //==============================================
     char arrChars1[4];
@@ -59,8 +61,8 @@ private:
 public:
 //===================================================================================================================
 // Setup external reference for internal manipulation. Now inside this class access is set to initialized class
-    MenuApplication_4x4(LCD_application& Ref_LCD_application,  Keypad4x4& RefKeypad4x4):
-        Ref_LCD_application(Ref_LCD_application), RefKeypad4x4(RefKeypad4x4){;}
+    MenuApplication_4x4(LCD_application& Ref_LCD_application,  Keypad4x4& RefKeypad4x4, DataAndTime& RefDataAndTime):
+        Ref_LCD_application(Ref_LCD_application), RefKeypad4x4(RefKeypad4x4), RefDataAndTime(RefDataAndTime) {;}
     ~MenuApplication_4x4(){;}
 //==============================================
     // Menu display menagment
@@ -71,7 +73,7 @@ public:
     void Display_App_Test2(void);
     
     // Call for Timer 1 interrupt
-    void IRQ_TIM1_AddMilisecondsAmount(uint16_t ms);
+    void IRQ_TIM1_(void);
     void IRQ_TIM1_Display(void);
 
     // Call for Timer 2 interrupt

@@ -286,6 +286,54 @@ void FormatConvert::ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[],
 }
 //====================================================================================================
 
+/*****************************************************************************************************
+ * @name		  TimeToStr
+ * @brief		  Time data format convert to string format
+ * @param[in]	pTime Pointer to data_time::conv_time_t fromat data
+ * @note		  void
+ * @return		void
+ */
+void FormatConvert::TimeToStr(data_time::time_t *pTime, char arrChar[])
+{
+  char tArray[8];
+  NumToString(pTime->hour, (char*)&tArray[0], TYPE_DEC_time_t);
+  NumToString(pTime->minute, (char*)&tArray[3], TYPE_DEC_time_t);
+  NumToString(pTime->second, (char*)&tArray[7], TYPE_DEC_time_t);
+
+  ToStrFormatDec((char*)&tArray[0], 2, (char*)&arrChar[0], 2);
+  ToStrFormatDec((char*)&tArray[3], 2, (char*)&arrChar[3], 2);
+  ToStrFormatDec((char*)&tArray[7], 2, (char*)&arrChar[7], 2);
+
+  arrChar[2] = ':';
+  arrChar[6] = ':';
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		  TimeToStr
+ * @brief		  Time data format convert to string format
+ * @param[in]	hour Value of a hour
+ * @param[in] minute Value of a minute 
+ * @param[in] second Value of a second
+ * @note		  void
+ * @return		void
+ */
+void FormatConvert::TimeToStr(uint8_t hour, uint8_t minute, uint8_t second, char arrChar[])
+{
+  char tArray[8];
+  NumToString(hour, (char*)&tArray[0], TYPE_DEC_time_t);
+  NumToString(minute, (char*)&tArray[3], TYPE_DEC_time_t);
+  NumToString(second, (char*)&tArray[7], TYPE_DEC_time_t);
+
+  ToStrFormatDec((char*)&tArray[0], 2, (char*)&arrChar[0], 2);
+  ToStrFormatDec((char*)&tArray[3], 2, (char*)&arrChar[3], 2);
+  ToStrFormatDec((char*)&tArray[7], 2, (char*)&arrChar[7], 2);
+
+  arrChar[2] = ':';
+  arrChar[6] = ':';
+}
+//====================================================================================================
+
 //====================================================================================================
 #endif // _INC_CONVERSION_METHODS
 //====================================================================================================
