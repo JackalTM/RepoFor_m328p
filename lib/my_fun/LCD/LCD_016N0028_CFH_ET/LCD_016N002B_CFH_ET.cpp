@@ -265,11 +265,13 @@ void LCD_016N002B_CFH_ET::SetCurrsorToPosition(uint8_t n_row, displayColLineNum_
 	case DISPLAY_LINE_1:
 		n_row = n_row | DISPLAY_LINE_TOP;
 		_PutCommandShort(DISPLAY_COMAND_CODE_FUN_SetDDRAM_ADDR(n_row), DISPLAY_DELAY_TIME_us_setDDRAM);
+		curstorPosition = n_row & 0x0F;
 		break;
 
 	case DISPLAY_LINE_2:
 		n_row = n_row | DISPLAY_LINE_BOT;
 		_PutCommandShort(DISPLAY_COMAND_CODE_FUN_SetDDRAM_ADDR(n_row), DISPLAY_DELAY_TIME_us_setDDRAM);
+		curstorPosition = n_row & 0x0F;
 		break;
 	
 	default:

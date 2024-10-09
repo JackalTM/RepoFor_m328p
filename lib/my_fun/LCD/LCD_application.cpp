@@ -148,7 +148,9 @@ inline void LCD_application::_PrintArrofChars(char* arrString, uint8_t strLen, u
 	for(i=0; i<strLen; i++)
 	{
 		tByte = (uint8_t)arrString[i];
-		LCD_016N002B_CFH_ET::PutData(tByte);
+		if(tByte != '\0')
+			LCD_016N002B_CFH_ET::PutData(tByte);
+		else{ break;}
 	}
 }
 //====================================================================================================
@@ -180,7 +182,9 @@ inline void LCD_application::_PrintArrofChars(const char arrString[], uint8_t st
 	for(i=0; i<strLen; i++)
 	{
 		tByte = (uint8_t)arrString[i];
-		LCD_016N002B_CFH_ET::PutData(tByte);
+		if(tByte != '\0')
+			LCD_016N002B_CFH_ET::PutData(tByte);
+		else{ break;}
 	}
 }
 //====================================================================================================
@@ -344,6 +348,40 @@ void LCD_application::Execute_PrintStr(void)
  */
 void LCD_application::PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col)
 {
+	char arr_chars_SRC[TYPE_DEC_uin8_t];
+
+	_Convert.NumToString(number, arr_chars_SRC, TYPE_DEC_uin8_t);
+	_PrintArrofChars(arr_chars_SRC, TYPE_DEC_uin8_t, n_row, n_col);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PrintInt
+ * @brief		Print int data of type uint16_t in certain place
+ * @param[in]	number Number to put on LCD display, type uint16_t
+ * @param[in]	n_row LCD row index when start display number
+ * @param[in]	n_col LCD column index when start display number
+ * @note		Int data is converted to string and then displayed
+ */
+void LCD_application::PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col)
+{
+	char arr_chars_SRC[TYPE_DEC_uint16_t];
+
+	_Convert.NumToString(number, arr_chars_SRC, TYPE_DEC_uint16_t);
+	_PrintArrofChars(arr_chars_SRC, TYPE_DEC_uint16_t, n_row, n_col);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PrintInt
+ * @brief		Print int data of type uint8_t in certain place
+ * @param[in]	number Number to put on LCD display type uint8_t
+ * @param[in]	n_row LCD row index when start display number
+ * @param[in]	n_col LCD column index when start display number
+ * @note		Int data is converted to string and then displayed
+ */
+void LCD_application::PrintInt_Format(uint8_t number, uint8_t n_row, uint8_t n_col)
+{
 	char arr_chars_SRC[TYPE_DEC_uin8_t]; 
 	char arr_chars_DST[TYPE_DEC_uin8_t];
 
@@ -361,13 +399,13 @@ void LCD_application::PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col)
  * @param[in]	n_col LCD column index when start display number
  * @note		Int data is converted to string and then displayed
  */
-void LCD_application::PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col)
+void LCD_application::PrintInt_Format(uint16_t number, uint8_t n_row, uint8_t n_col)
 {
 	char arr_chars_SRC[TYPE_DEC_uint16_t];
 	char arr_chars_DST[TYPE_DEC_uint16_t];
 
 	_Convert.NumToString(number, arr_chars_SRC, TYPE_DEC_uint16_t);
-	_Convert.ToStrFormatDec(arr_chars_SRC, TYPE_DEC_uin8_t, arr_chars_DST, TYPE_DEC_uint16_t);
+	_Convert.ToStrFormatDec(arr_chars_SRC, TYPE_DEC_uin8_t, arr_chars_DST, TYPE_DEC_uin8_t);
 	_PrintArrofChars(arr_chars_DST, TYPE_DEC_uint16_t, n_row, n_col);
 }
 //====================================================================================================
@@ -466,18 +504,16 @@ void LCD_application::Execute_PrintInt(void)
  */
 void LCD_application::PrintTime(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col)
 {
-	char arrChar1[10];
-	char arrChar2[10];
+	char arrChar1[data_time_TIME_LEN];
+	char arrChar2[data_time_TIME_LEN];
 
 	_Convert.NumToString(pTime->hour, (char*)&arrChar1[0], TYPE_DEC_time_t);
 	_Convert.NumToString(pTime->minute, (char*)&arrChar1[3], TYPE_DEC_time_t);
-	_Convert.NumToString(pTime->second, (char*)&arrChar1[7], TYPE_DEC_time_t);
+	_Convert.NumToString(pTime->second, (char*)&arrChar1[6], TYPE_DEC_time_t);
 
-	_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&arrChar2[0], 2);
-	arrChar2[2] = ':';
-	_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&arrChar2[3], 2);
-	arrChar2[6] = ':';
-	_Convert.ToStrFormatDec((char*)&arrChar1[7], 2, (char*)&arrChar2[7], 2);
+	_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&arrChar2[0], 2);	arrChar2[2] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&arrChar2[3], 2);	arrChar2[5] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[6], 2, (char*)&arrChar2[6], 2);	arrChar2[8] = '\0';
 
 	_PrintArrofChars(arrChar2, data_time_TIME_LEN, n_row, n_col);
 }
@@ -495,18 +531,16 @@ void LCD_application::PrintTime(data_time::time_t *pTime, uint8_t n_row, uint8_t
  */
 void LCD_application::PrintTime(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col)
 {
-	char arrChar1[10];
-	char arrChar2[10];
+	char arrChar1[data_time_TIME_LEN];
+	char arrChar2[data_time_TIME_LEN];
 
 	_Convert.NumToString(hour, (char*)&arrChar1[0], TYPE_DEC_time_t);
 	_Convert.NumToString(minute, (char*)&arrChar1[3], TYPE_DEC_time_t);
-	_Convert.NumToString(second, (char*)&arrChar1[7], TYPE_DEC_time_t);
+	_Convert.NumToString(second, (char*)&arrChar1[6], TYPE_DEC_time_t);
 
-	_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&arrChar2[0], 2);
-	arrChar2[2] = ':';
-	_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&arrChar2[3], 2);
-	arrChar2[6] = ':';
-	_Convert.ToStrFormatDec((char*)&arrChar1[7], 2, (char*)&arrChar2[7], 2);
+	_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&arrChar2[0], 2);	arrChar2[2] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&arrChar2[3], 2);	arrChar2[5] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[6], 2, (char*)&arrChar2[6], 2);	arrChar2[8] = '\0';
 
 	_PrintArrofChars(arrChar2, data_time_TIME_LEN, n_row, n_col);
 }
@@ -522,18 +556,16 @@ void LCD_application::PrintTime(uint8_t hour, uint8_t minute, uint8_t second, ui
  */
 void LCD_application::Order_PrintTime(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col)
 {
-	char arrChar1[10];
+	char arrChar1[data_time_TIME_LEN];
 	if(_display_data_order_active == false)	
 	{ 	
 		_Convert.NumToString(pTime->hour, (char*)&arrChar1[0], TYPE_DEC_time_t);
 		_Convert.NumToString(pTime->minute, (char*)&arrChar1[3], TYPE_DEC_time_t);
-		_Convert.NumToString(pTime->second, (char*)&arrChar1[7], TYPE_DEC_time_t);
+		_Convert.NumToString(pTime->second, (char*)&arrChar1[6], TYPE_DEC_time_t);
 
-		_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&_arrBuffer[0], 2);
-		_arrBuffer[2] = ':';
-		_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&_arrBuffer[3], 2);
-		_arrBuffer[6] = ':';
-		_Convert.ToStrFormatDec((char*)&arrChar1[7], 2, (char*)&_arrBuffer[7], 2);
+		_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&_arrBuffer[0], 2);	_arrBuffer[2] = ':';
+		_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&_arrBuffer[3], 2);	_arrBuffer[5] = ':';
+		_Convert.ToStrFormatDec((char*)&arrChar1[6], 2, (char*)&_arrBuffer[6], 2);	_arrBuffer[8] = '\0';
 
 		_strLen = data_time_TIME_LEN;
 		_n_row = n_row;
@@ -558,18 +590,16 @@ void LCD_application::Order_PrintTime(data_time::time_t *pTime, uint8_t n_row, u
  */
 void LCD_application::Order_PrintTime(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col)
 {
-	char arrChar1[10];
+	char arrChar1[data_time_TIME_LEN];
 	if(_display_data_order_active == false)	
 	{ 	
 		_Convert.NumToString(hour, (char*)&arrChar1[0], TYPE_DEC_time_t);
 		_Convert.NumToString(minute, (char*)&arrChar1[3], TYPE_DEC_time_t);
-		_Convert.NumToString(second, (char*)&arrChar1[7], TYPE_DEC_time_t);
+		_Convert.NumToString(second, (char*)&arrChar1[6], TYPE_DEC_time_t);
 
-		_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&_arrBuffer[0], 2);
-		_arrBuffer[2] = ':';
-		_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&_arrBuffer[3], 2);
-		_arrBuffer[6] = ':';
-		_Convert.ToStrFormatDec((char*)&arrChar1[7], 2, (char*)&_arrBuffer[7], 2);
+		_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&_arrBuffer[0], 2);	_arrBuffer[2] = ':';
+		_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&_arrBuffer[3], 2);	_arrBuffer[5] = ':';
+		_Convert.ToStrFormatDec((char*)&arrChar1[6], 2, (char*)&_arrBuffer[6], 2);	_arrBuffer[8] = '\0';
 
 		_strLen = data_time_TIME_LEN;
 		_n_row = n_row;

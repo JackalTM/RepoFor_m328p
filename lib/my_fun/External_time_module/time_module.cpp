@@ -11,11 +11,11 @@ DataAndTime::DataAndTime(const uint8_t in_F)
  */
 void DataAndTime::IncSecond(void)
 {
-    if(second < 60)
+    if(second < 59)
     {   second++;}
     else
     {   second=0;
-        if(minute < 60)
+        if(minute < 59)
         {   minute++;}
         else
         {   minute=0;
@@ -33,7 +33,7 @@ void DataAndTime::IncSecond(void)
  * @name    IncSecond
  * @brief   Add one second time data
  */
-inline void DataAndTime::IRQ_TickEvent(void)
+void DataAndTime::IRQ_TickEvent(void)
 {
     if(n < _F)
     {   n++;}

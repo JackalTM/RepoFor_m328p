@@ -48,6 +48,8 @@ uint8_t _PutDataBuffer(uint8_t data);
 //====================================================================
 
 public:
+    uint8_t curstorPosition;
+
 /*********************************************************************
  * Definitions for public class varibales 
 */
@@ -61,15 +63,17 @@ public:
     uint8_t AmountCharsToEnd(void);
 
     // Cursor movement menagment, LCD data displayed momvemt
-    void SetCurrsorToPosition(uint8_t* p_nRow, uint8_t* p_nCol);
-    uint8_t PutOneChar(uint8_t data);
+    bool SetCurrsorToPosition(uint8_t* p_nRow, uint8_t* p_nCol);
+    uint8_t SetCurrsorToPosition(uint8_t nRow, uint8_t nCol);
+    bool PutOneChar(uint8_t data);
 
     // Print and delete data from array display. 
     // Both method return amount of characters that have been printed or deleted
     // due to current cursor position
     uint8_t PrintStr(const char pStr[], uint8_t strLen);
-    uint8_t DeletStr(const char pStr[], uint8_t strLen);
     uint8_t PrintStr(char pStr[], uint8_t strLen);
+
+    uint8_t DeletStr(const char pStr[], uint8_t strLen);
     uint8_t DeletStr(char pStr[], uint8_t strLen);
 };
 //==============================================================================================

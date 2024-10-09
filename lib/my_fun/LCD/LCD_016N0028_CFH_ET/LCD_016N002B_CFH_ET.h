@@ -178,7 +178,6 @@ enum displayLineOffset_enum{DISPLAY_LINE_TOP= (uint8_t)0x00,   DISPLAY_LINE_BOT=
 class LCD_016N002B_CFH_ET
 {
 private:
-
 //Send long instruction for LCD display 
 void _PutCommandLong(uint8_t cmd, enum_DISPLAY_DELAY_TIME_MS time_ms);
 
@@ -187,6 +186,8 @@ void _PutCommandShort(uint8_t cmd, enum_DISPLAY_DELAY_TIME_US time_us);
 //====================================================================
 
 public:
+    uint8_t curstorPosition;
+
 /*********************************************************************
  * Definitions for public class varibales 
 */

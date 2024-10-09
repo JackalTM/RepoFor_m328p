@@ -43,7 +43,6 @@ private:
     //ConvertTime&        RefConvertTime;
     Keypad4x4&          RefKeypad4x4;
     DataAndTime         RefDataAndTime;
-    
 
     data_time::time_t    _time;
     uint32_t miliSec;
@@ -52,7 +51,7 @@ private:
     char arrChars2[4];
 
     volatile uint8_t _keypad_state;
-    volatile bool _display_data_order_active;
+    volatile bool _display_data_order_active, _printtime;
     volatile uint8_t _data_from_keypad_IRQ;
 
     volatile uint8_t _ticketRedNum;

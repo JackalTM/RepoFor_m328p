@@ -7,8 +7,8 @@
 #include "x01_menu.h"
 #ifdef _INC_x01_MENU_H
 
-#define ROW_RED 6U
-#define ROW_BLU 6U
+#define ROW_RED 4U
+#define ROW_BLU 4U
 
 #define COL_RED 0U
 #define COL_BLU 1U
@@ -25,11 +25,11 @@ void MenuApplication_4x4::InitializeDisplay_AppTest1(void)
 	Ref_LCD_application.ClearDisplayData();
 
 	Ref_LCD_application.PrintStr("RED", 3, 0, COL_RED);
-	Ref_LCD_application.PrintStr("000", 3, ROW_RED, COL_RED);
+	Ref_LCD_application.PrintStr("  0", 3, 4, COL_RED);
 	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, ROW_RED, COL_RED);
 
 	Ref_LCD_application.PrintStr("BLU", 3, 0, COL_BLU);
-	Ref_LCD_application.PrintStr("000", 3, ROW_BLU, COL_BLU);
+	Ref_LCD_application.PrintStr("  0", 3, 4, COL_BLU);
 	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, ROW_BLU, COL_BLU);
 
 	_ticketRedNum = 0;
@@ -55,28 +55,36 @@ void MenuApplication_4x4::Display_App_Test1(void)
 		{
 		case KEYCODE_11: // Keypad 11, Increase RED tickets
 			_ticketRedNum++;
-			Ref_LCD_application.PrintInt(_ticketRedNum, ROW_RED, COL_RED);
+			Ref_LCD_application.PrintInt_Format(_ticketRedNum, 3, 0);
 			break;
 
 		case KEYCODE_12: // Keypad 12, Decrease RED tickets
 			_ticketRedNum--;
-			Ref_LCD_application.PrintInt(_ticketRedNum, ROW_RED, COL_RED);
+			Ref_LCD_application.PrintInt_Format(_ticketRedNum, 3, 0);
 			break;
 
 		case KEYCODE_13: // Keypad 13, Increase BLU tickets
 			_ticketBluNum++;
-			Ref_LCD_application.PrintInt(_ticketBluNum, ROW_BLU, COL_BLU);
+			Ref_LCD_application.PrintInt_Format(_ticketBluNum, 3, 1);
 			break;
 
 		case KEYCODE_14: // Keypad 14, Decrease BLU tickets
 			_ticketBluNum--;
-			Ref_LCD_application.PrintInt(_ticketBluNum, ROW_BLU, COL_BLU);
+			Ref_LCD_application.PrintInt_Format(_ticketBluNum, 3, 1);
 			break;
 
 		default:// Other keypad
 			break;
 		}
 		_display_data_order_active = false;
+	}
+	else{;}
+
+	if(_printtime == true) 
+	{
+		Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 8, 0);
+		Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 8, 1);
+		_printtime = false;
 	}
 	else{;}
 }
@@ -96,8 +104,8 @@ void MenuApplication_4x4::InitializeDisplay_AppTest2(void)
 	Ref_LCD_application.PrintStr("RED", 3, 0, 0);
 	Ref_LCD_application.PrintStr("BLU", 3, 0, 1);
 
-	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
-	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
+	//Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
+	//Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, 8,0);
 }
 //==================================================================================================================
 
@@ -154,7 +162,7 @@ void MenuApplication_4x4::IRQ_TIM1_(void)
 {
 	RefDataAndTime.IRQ_TickEvent();
 	RefDataAndTime.GetTime((data_time::time_t*)&_time);
-	Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 7, 0);
+	_printtime = true;
 }
 //==================================================================================================================
 

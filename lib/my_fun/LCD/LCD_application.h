@@ -44,6 +44,8 @@ private:
     void _PrintArrofChars(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
 //--------------------------------------------------------------------------------------------
 public:
+uint8_t debuCursorPosition1, debuCursorPosition2, debuCursorPosition3;
+
     LCD_application(uint8_t row_n, uint8_t col_n);
     ~LCD_application();
 //============================================================================================
@@ -69,6 +71,8 @@ public:
 // Definitions for print string data 
     void PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col);
     void PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col);
+    void PrintInt_Format(uint8_t number, uint8_t n_row, uint8_t n_col);
+    void PrintInt_Format(uint16_t number, uint8_t n_row, uint8_t n_col);
 
     void Order_PrintInt(uint8_t number, uint8_t n_row, uint8_t n_col);
     void Order_PrintInt(uint16_t number, uint8_t n_row, uint8_t n_col);

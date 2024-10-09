@@ -8,14 +8,14 @@
 
 namespace data_time{
 
-    #define data_time_TIME_LEN (uint8_t)8U
-    #define data_time_DATA_LEN (uint8_t)10U
+    #define data_time_TIME_LEN (uint8_t)9U
+    #define data_time_DATA_LEN (uint8_t)11U
 //============================================================================= 
 typedef struct
 {
-    uint16_t hour;
-    uint16_t minute;
-    uint16_t second;
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
 }time_t;
 //--------------------
 

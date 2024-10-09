@@ -147,10 +147,7 @@ FormatConvert::~FormatConvert(){;}
 void FormatConvert::_SetCharArray(char arrChar[], uint8_t strLen, char inChar)
 {
   uint8_t i;
-  for(i=0; i<strLen; i++)
-  {
-    arrChar[i] = inChar;
-  }
+  for(i=0; i<strLen; i++) { arrChar[i] = inChar;}
 }
 //====================================================================================================
 
@@ -167,7 +164,7 @@ void FormatConvert::_SetCharArray(char arrChar[], uint8_t strLen, char inChar)
  */
 void FormatConvert::NumToString(uint8_t number, char arrChar[], DecimalNumberStringSize strSize)
 {
-  _SetCharArray(arrChar, strSize, '\0');
+  _SetCharArray(arrChar, strSize, ' ');
   NumbersConversion::SetMaxStringLenght(strSize);
   *(NumbersConversion::Uint_to_str_dec(arrChar, number))  = '\0';
 }
@@ -186,7 +183,7 @@ void FormatConvert::NumToString(uint8_t number, char arrChar[], DecimalNumberStr
  */
 void FormatConvert::NumToString(uint8_t number, char arrChar[], HexadeciNumberStringSize strSize)
 {
-  _SetCharArray(arrChar, strSize, '\0');
+  _SetCharArray(arrChar, strSize, ' ');
   NumbersConversion::SetMaxStringLenght(strSize);
   *(NumbersConversion::Uint_to_str_hex(arrChar, number))  = '\0';
 }

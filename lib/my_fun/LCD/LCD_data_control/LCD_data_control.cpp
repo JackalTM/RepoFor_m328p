@@ -136,18 +136,49 @@ uint8_t LCD_DataControl::AmountCharsToEnd(void)
  * @param[in]	col_n Certain col is set
  * 
  * @note		Data is set when input atays in range
+ * 
+ * @return		Bool value, true when column or row value is changed
  */
-void LCD_DataControl::SetCurrsorToPosition(uint8_t* p_nRow, uint8_t* p_nCol)
-{
+bool LCD_DataControl::SetCurrsorToPosition(uint8_t* p_nRow, uint8_t* p_nCol)
+{	bool tBool = false;
 	if(*p_nCol < DISPLAY_BUFFER_MAX_COL_AMOUT)
 	{	_idx_col = *p_nCol; }
 	else
-	{	*p_nCol = _idx_col;}
+	{	*p_nCol = _idx_col; tBool |= true; }
 
 	if(*p_nRow < DISPLAY_BUFFER_MAX_ROW_AMOUT)
 	{	_idx_row = *p_nRow; }
 	else
-	{	*p_nRow = _idx_row;}
+	{	*p_nRow = _idx_row; tBool |= true; }
+
+	return tBool;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		SetCurrsorToPosition
+ * @brief		Cursor is placed to certain position
+ * 
+ * @param[in]	row_n Certain row is set 
+ * @param[in]	col_n Certain col is set
+ * 
+ * @note		Data is set when input atays in range
+ * 
+ * @return		Current row cursor value
+ */
+uint8_t LCD_DataControl::SetCurrsorToPosition(uint8_t nRow, uint8_t nCol)
+{
+	if(nCol < DISPLAY_BUFFER_MAX_COL_AMOUT)
+	{	_idx_col = nCol; }
+	else
+	{	nCol = _idx_col;}
+
+	if(nRow < DISPLAY_BUFFER_MAX_ROW_AMOUT)
+	{	_idx_row = nRow; }
+	else
+	{	nRow = _idx_row;}
+
+	return nRow;
 }
 //====================================================================================================
 
@@ -158,12 +189,12 @@ void LCD_DataControl::SetCurrsorToPosition(uint8_t* p_nRow, uint8_t* p_nCol)
  * @note		void
  * @return		void
  */
-uint8_t LCD_DataControl::PutOneChar(uint8_t data)
+bool LCD_DataControl::PutOneChar(uint8_t data)
 {
 	uint8_t iMAX;
 
 	iMAX = AmountCharsToEnd();
-	if(iMAX == 0) {return FALSE;}
+	if(iMAX == 0) {return false;}
 	else{;}
 
 	_arrDisplayData[_idx_col][_idx_row] = data;
@@ -173,7 +204,7 @@ uint8_t LCD_DataControl::PutOneChar(uint8_t data)
 	{	_idx_row = DISPLAY_BUFFER_CURRSOR_IDX_END;}
 	else{;}
 
-	return TRUE;
+	return true;
 }
 //====================================================================================================
 
