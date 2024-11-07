@@ -1,7 +1,6 @@
-#include <Init.h>
-//#include "converion_methods.h"
-//#include "LCD_application.h"
-#include <KeyPad.h>
+#include <Initialization_328p/Init_328p.h>
+#include <KeyPad/KeyPad_4x4.h>
+#include "External_time_module/time_module.h"
 #include "x01_menu.h"
 
 /**************************************************************************
@@ -10,17 +9,11 @@
 InitPeryferia_m328p 	myInitialization_uC;
 LCD_application 		myLCD_app(16,2);
 Keypad4x4 				myKeyPad4x4(0x07);
-KeyPad1x4				myKeyPad1x4(0x07);
-
-MenuApplication_4x4		myMenuApp_4x4(myLCD_app, myKeyPad4x4);
-//MenuApplication_1x4		myMenuApp_1x4(myLCD_app, myKeyPad1x4);
+DataAndTime 			myDataAndTime(2);
+// Call for applicatin
+MenuApplication_4x4		myMenuApp_4x4(myLCD_app, myKeyPad4x4, myDataAndTime);
 //=========================================================================
 
-/**************************************************************************
- * Initialization of a global variables
-*/
-//volatile uint8_t globalKeypadState;
-//=========================================================================
 int main(void)
 {
 	myInitialization_uC.DataDirectionsResistrsInit();	// Inicializacja Port�w
@@ -42,12 +35,20 @@ int main(void)
 //=============================================================================
 
 /******************************************************************************
+ * Przerwanie dla Timer1 z powodu porównania dla licznika
+*/
+ISR(TIMER1_COMPA_vect)
+{
+	;
+}
+//=============================================================================
+
+/******************************************************************************
  * Przerwanie dla Timer1 z powodu przepełnienia
 */
 ISR(TIMER1_OVF_vect)
 {
-	//myMenuApp_4x4.IRQ_TIM1_Display();
-	;
+	myMenuApp_4x4.IRQ_TIM1_();
 }
 //=============================================================================
 
