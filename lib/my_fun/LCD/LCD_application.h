@@ -11,7 +11,6 @@
 #include "LCD_data_control/LCD_data_control.h"
 #include "LCD_016N0028_CFH_ET/LCD_016N002B_CFH_ET.h"
 #include "Data_conversion/converion_methods.h"
-//#include "KeyPad.h"
 
 /*****************************************************************************************************
  * Global data definitions
@@ -40,8 +39,15 @@ private:
 //--------------------------------------------------------------------------------------------
     void _PutChar(char c, uint8_t n_row, uint8_t n_col);
     void _PutChar(const char *c, uint8_t n_row, uint8_t n_col);
+
+    void _PutCharOther(char c, uint8_t n_row, uint8_t n_col);
+    void _PutCharOther(const char *c, uint8_t n_row, uint8_t n_col);
+//--------------------------------------------------------------------------------------------
     void _PrintArrofChars(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void _PrintArrofChars(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
+
+    void _PrintArrofCharsOther(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
+    void _PrintArrofCharsOther(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
 //--------------------------------------------------------------------------------------------
 public:
 uint8_t debuCursorPosition1, debuCursorPosition2, debuCursorPosition3;
@@ -61,6 +67,9 @@ uint8_t debuCursorPosition1, debuCursorPosition2, debuCursorPosition3;
 // Definitions for print string data 
     void PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
+
+    void PrintStrOther(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
+    void PrintStrOther(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
     
     void Order_PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col);
     void Order_PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col);
@@ -86,6 +95,9 @@ uint8_t debuCursorPosition1, debuCursorPosition2, debuCursorPosition3;
     void Order_PrintTime(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col); 
     void Order_PrintTime(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col);
     void Execute_PrintTime(void);
+
+    void PrintTimeOther(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col); 
+    void PrintTimeOther(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col);
 //============================================================================================
 
 //============================================================================================

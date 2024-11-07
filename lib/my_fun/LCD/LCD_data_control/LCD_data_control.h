@@ -29,6 +29,31 @@
 //===============================================================================================================
 
 /****************************************************************************************************************
+ * Errors enumarate for LCD_data_control
+ */
+enum lcdDataError_en
+{
+    LCD_DATA_OK = (uint8_t)0x00,         // Return OK
+    LCD_DATA_ER_cursor = (uint8_t)0x01,  // Cursor value exede maximum
+    LCD_DATA_ER_line = (uint8_t)0x02,    // Line value exeade max
+    LCD_DATA_ER_strTooLong = (uint8_t)0x04 // String lenght too long. Rest is removed
+};
+#define ERROR_CODE uint8_t
+//===============================================================================================================
+
+/****************************************************************************************************************
+ * Structure for manage LCD data
+ */
+typedef struct 
+{
+    uint8_t iStart;
+    uint8_t iEnd;
+    uint8_t i;
+    uint8_t* pArray;
+}lcdPrtData_t;
+//===============================================================================================================
+
+/****************************************************************************************************************
  * Class for menage LCD display 
 */
 class LCD_DataControl
@@ -67,6 +92,8 @@ public:
     uint8_t SetCurrsorToPosition(uint8_t nRow, uint8_t nCol);
     bool PutOneChar(uint8_t data);
 
+    ERROR_CODE GetChar(uint8_t n_row, uint8_t n_col, char* pchar);
+
     // Print and delete data from array display. 
     // Both method return amount of characters that have been printed or deleted
     // due to current cursor position
@@ -75,6 +102,13 @@ public:
 
     uint8_t DeletStr(const char pStr[], uint8_t strLen);
     uint8_t DeletStr(char pStr[], uint8_t strLen);
+    
+    uint8_t GetString(char pStr[], uint8_t n_row, uint8_t n_col, uint8_t strLen);
+
+    uint8_t CompareStr(char* pStr1, char* pStr2, uint8_t strLen);
+    uint8_t CompareStr(const char pStr1[], char* pStr2, uint8_t strLen);
+    void  CompareStr(char* pStr1, char* pStr2, bool pCmp[], uint8_t strLen);
+    void  CompareStr(const char pStr1[], char* pStr2, bool pCmp[], uint8_t strLen);
 };
 //==============================================================================================
 #endif // ifndef LCD_DATA_CONTROL_H_

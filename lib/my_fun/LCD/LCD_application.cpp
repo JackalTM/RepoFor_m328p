@@ -122,6 +122,34 @@ inline void LCD_application::_PutChar(const char *c, uint8_t n_row, uint8_t n_co
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		_PutCharOther
+ * @brief		If character is diffrent that arleady printed then Send one char to the LCD screen
+ * @param[in]	c  Character to send
+ * @param[in]	n_row LCD row position for character 
+ * @param[in]	n_col LCD column position for character 
+ * @note		Private method
+ */
+inline void LCD_application::_PutCharOther(char c, uint8_t n_row, uint8_t n_col)
+{
+	;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		_PutCharOther
+ * @brief		If character is diffrent that arleady printed then Send one char to the LCD screen
+ * @param[in]	c  Character to send
+ * @param[in]	n_row LCD row position for character 
+ * @param[in]	n_col LCD column position for character 
+ * @note		Private method
+ */
+inline void LCD_application::_PutCharOther(const char *c, uint8_t n_row, uint8_t n_col)
+{
+	;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		_PrintArrofChars
  * @brief		Put array of chars on LCD display
  * @param[in]	arrString	Pointer char array buffer
@@ -190,6 +218,72 @@ inline void LCD_application::_PrintArrofChars(const char arrString[], uint8_t st
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		_PrintArrofCharsOther
+ * @brief		Put array of chars on LCD display
+ * @param[in]	arrString	Pointer char array buffer
+ * @param[in]	strLen		String lenght
+ * @param[in]	n_row		Row place to display
+ * @param[in]	n_col		Column place to display
+ * @note		Private mthod	
+ */
+inline void LCD_application::_PrintArrofCharsOther(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col)
+{
+	uint8_t i, firstChange;
+	char tarrstr[16];
+
+	// 1. Load data from buffer
+	strLen = LCD_DataControl::GetString(tarrstr, n_row, n_col, strLen);
+
+	// 2. Compare data 
+	firstChange = LCD_DataControl::CompareStr(arrString, tarrstr, strLen);
+	n_row = n_row + firstChange;
+
+	// 3. Asssing str after first change
+	strLen = strLen - firstChange;
+	for(i=0; i<strLen; i++)
+	{
+		tarrstr[i] = arrString[firstChange + i];
+	}
+
+	// 4. Print data after optimalization
+	_PrintArrofChars(tarrstr, strLen, n_row, n_col);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		_PrintArrofCharsOther
+ * @brief		Put array of chars on LCD display
+ * @param[in]	arrString	Pointer char array buffer
+ * @param[in]	strLen		String lenght
+ * @param[in]	n_row		Row place to display
+ * @param[in]	n_col		Column place to display
+ * @note		Printed string is optimalized
+ */
+inline void LCD_application::_PrintArrofCharsOther(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
+{
+	uint8_t i, firstChange;
+	char tarrstr[16];
+
+	// 1. Load data from buffer
+	strLen = LCD_DataControl::GetString(tarrstr, n_row, n_col, strLen);
+
+	// 2. Compare data 
+	firstChange = LCD_DataControl::CompareStr(arrString, tarrstr, strLen);
+	n_row = n_row + firstChange;
+
+	// 3. Asssing str after first change
+	strLen = strLen - firstChange;
+	for(i=0; i<strLen; i++)
+	{
+		tarrstr[i] = arrString[firstChange + i];
+	}
+
+	// 4. Print data after optimalization
+	_PrintArrofChars(tarrstr, strLen, n_row, n_col);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		PutChar
  * @brief		Send one char to the LCD screen
  * @param[in]	c  Character to send
@@ -237,7 +331,8 @@ void LCD_application::Order_PrintChar(uint8_t data)
  * @param[in]	n_col		Column place to display
  * @note		Public method
  */
-void LCD_application::PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col){_PrintArrofChars(arrString, strLen, n_row, n_col); }
+void LCD_application::PrintStr(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
+{	_PrintArrofChars(arrString, strLen, n_row, n_col); }
 //====================================================================================================
 
 /*****************************************************************************************************
@@ -249,7 +344,34 @@ void LCD_application::PrintStr(const char arrString[], uint8_t strLen, uint8_t n
  * @param[in]	n_col		Column place to display
  * @note		Public method
  */
-void LCD_application::PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col) {	_PrintArrofChars(arrString, strLen, n_row, n_col);}
+void LCD_application::PrintStr(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col) 
+{	_PrintArrofChars(arrString, strLen, n_row, n_col);}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PrintStr
+ * @brief		Put array of chars on LCD display
+ * @param[in]	arrString	String array buffer
+ * @param[in]	strLen		String lenght
+ * @param[in]	n_row		Row place to display
+ * @param[in]	n_col		Column place to display
+ * @note		Public method
+ */
+void LCD_application::PrintStrOther(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
+{	_PrintArrofCharsOther(arrString, strLen, n_row, n_col); }
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PrintStr
+ * @brief		Put array of chars on LCD display
+ * @param[in]	arrString	String array buffer
+ * @param[in]	strLen		String lenght
+ * @param[in]	n_row		Row place to display
+ * @param[in]	n_col		Column place to display
+ * @note		Public method
+ */
+void LCD_application::PrintStrOther(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col) 
+{	_PrintArrofCharsOther(arrString, strLen, n_row, n_col); }
 //====================================================================================================
 
 /*****************************************************************************************************
@@ -547,6 +669,58 @@ void LCD_application::PrintTime(uint8_t hour, uint8_t minute, uint8_t second, ui
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		PrintTimeOther
+ * @brief		Print time data format data_time::time_t
+ * @param[in]	pTime 	Poiner to strucuture data_time::time_t*
+ * @param[in]	n_row	Row place to display
+ * @param[in]	n_col	Column place to display
+ * @note		Only changed data is printed
+ */
+void LCD_application::PrintTimeOther(data_time::time_t *pTime, uint8_t n_row, uint8_t n_col)
+{
+	char arrChar1[data_time_TIME_LEN];
+	char arrChar2[data_time_TIME_LEN];
+
+	_Convert.NumToString(pTime->hour, (char*)&arrChar1[0], TYPE_DEC_time_t);
+	_Convert.NumToString(pTime->minute, (char*)&arrChar1[3], TYPE_DEC_time_t);
+	_Convert.NumToString(pTime->second, (char*)&arrChar1[6], TYPE_DEC_time_t);
+
+	_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&arrChar2[0], 2);	arrChar2[2] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&arrChar2[3], 2);	arrChar2[5] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[6], 2, (char*)&arrChar2[6], 2);	arrChar2[8] = '\0';
+
+	_PrintArrofCharsOther(arrChar2, data_time_TIME_LEN, n_row, n_col);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		PrintTimeOther
+ * @brief		Print time data format of uint8_t hour, uint8_t minute, uint8_t second
+ * @param[in]	hour 	Valut of a hour
+ * @param[in]	minute 	Valur of a minute 
+ * @param[in]	second 	Value of a second
+ * @param[in]	n_row	Row place to display
+ * @param[in]	n_col	Column place to display
+ * @note		Only changed data is printed
+ */
+void LCD_application::PrintTimeOther(uint8_t hour, uint8_t minute, uint8_t second, uint8_t n_row, uint8_t n_col)
+{
+	char arrChar1[data_time_TIME_LEN];
+	char arrChar2[data_time_TIME_LEN];
+
+	_Convert.NumToString(hour, (char*)&arrChar1[0], TYPE_DEC_time_t);
+	_Convert.NumToString(minute, (char*)&arrChar1[3], TYPE_DEC_time_t);
+	_Convert.NumToString(second, (char*)&arrChar1[6], TYPE_DEC_time_t);
+
+	_Convert.ToStrFormatDec((char*)&arrChar1[0], 2, (char*)&arrChar2[0], 2);	arrChar2[2] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[3], 2, (char*)&arrChar2[3], 2);	arrChar2[5] = ':';
+	_Convert.ToStrFormatDec((char*)&arrChar1[6], 2, (char*)&arrChar2[6], 2);	arrChar2[8] = '\0';
+
+	_PrintArrofCharsOther(arrChar2, data_time_TIME_LEN, n_row, n_col);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		PrintTime
  * @brief		Print time data format data_time::time_t
  * @param[in]	pTime 	Poiner to strucuture data_time::time_t*
@@ -616,7 +790,7 @@ void LCD_application::Execute_PrintTime(void)
 {
 	if(_display_data_order_active == true)	
 	{ 	
-		_PrintArrofChars(_arrBuffer, _strLen, _n_row, _n_col);
+		_PrintArrofCharsOther(_arrBuffer, _strLen, _n_row, _n_col);
 		_strLen = 0;
 
 		_display_data_order_active = false;

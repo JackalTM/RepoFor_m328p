@@ -82,7 +82,7 @@ void MenuApplication_4x4::Display_App_Test1(void)
 
 	if(_printtime == true) 
 	{
-		Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 8, 0);
+		Ref_LCD_application.PrintTimeOther((data_time::time_t*)&(_time), 8, 0);
 		Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 8, 1);
 		_printtime = false;
 	}

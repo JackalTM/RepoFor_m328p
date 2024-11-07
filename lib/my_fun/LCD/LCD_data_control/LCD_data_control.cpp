@@ -209,6 +209,36 @@ bool LCD_DataControl::PutOneChar(uint8_t data)
 //====================================================================================================
 
 /*****************************************************************************************************
+ * @name		GetOneChar
+ * @brief		Write char in place passed by values.
+ * @param[in]	data Input data to insert into data array
+ * @note		void
+ * @return		Error code that contain error bit set of type lcdDataError_en
+ */
+ERROR_CODE LCD_DataControl::GetChar(uint8_t n_row, uint8_t n_col, char* pchar)
+{
+	uint8_t error = LCD_DATA_OK;
+	if(n_row > DISPLAY_BUFFER_CURRSOR_IDX_END) 
+	{
+		n_row = DISPLAY_BUFFER_CURRSOR_IDX_END;
+		error = error | LCD_DATA_ER_cursor;
+	}
+	else{;}
+
+	if(n_col > DISPLAY_BUFFER_LINE_2)
+	{
+		n_col = DISPLAY_BUFFER_LINE_2;
+		error = error | LCD_DATA_ER_line;
+	}
+	else{;}
+
+	*pchar = _arrDisplayData[n_row][n_col];
+
+	return error;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
  * @name		PrintStr
  * @brief		Print array of characters on LCD screen
  * 
@@ -316,6 +346,153 @@ uint8_t LCD_DataControl::DeletStr(const char pStr[], uint8_t strLen)
 	else{;}
 
 	return strLen;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		GetStr 
+ * @brief		Load string from data buffer
+ * @param[in]	pStr[] Pointer to destination string array, dublet data will be removed
+ * @param[in]	strLen Lenght of source string
+ * @note		Removes characted if the same exist in LCD data
+ * 				Optimalization to not print already printed char
+ * @return		void
+ */
+uint8_t LCD_DataControl::GetString(char pStr[], uint8_t n_row, uint8_t n_col, uint8_t strLen)
+ {
+	uint8_t i, irow, iMAX;
+
+	iMAX = AmountCharsToEnd();
+	if(iMAX == 0) { return 0; }
+	else{;}
+
+	if(strLen > iMAX)
+	{	strLen = iMAX;}
+	else{;}
+
+	for(i=0; i<strLen; i++)
+	{
+		irow = _idx_row + i;
+		pStr[i] = _arrDisplayData[_idx_col][irow];
+	}
+
+	if(_idx_row > DISPLAY_BUFFER_CURRSOR_IDX_END)
+	{	_idx_row = DISPLAY_BUFFER_CURRSOR_IDX_END;}
+	else{;}
+
+	return strLen;
+ }
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		CompareStr
+ * @brief		Compare two strings 
+ * @param[in]	pStr1 String array first 
+ * @param[in]	pStr2 String array second
+ * @param[in]	strLen String lenght 
+ * @note		Return value is a first diferences 
+ * @return		First changes in two string comparason
+ */
+uint8_t LCD_DataControl::CompareStr(char* pStr1, char* pStr2, uint8_t strLen)
+{
+	uint8_t i, firstChange;
+	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
+	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
+	else{;}
+
+	firstChange = 0;
+	for(i=0; i<strLen; i++)
+	{
+		if(pStr1[i] == pStr2[i])
+		{	firstChange++; }
+		else
+		{	break; }
+	}
+
+	return firstChange;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		CompareStr
+ * @brief		Compare two strings 
+ * @param[in]	pStr1 String array first 
+ * @param[in]	pStr2 String array second
+ * @param[in]	strLen String lenght 
+ * @note		Return value is a first diferences 
+ * @return		First changes in two string comparason
+ */
+uint8_t LCD_DataControl::CompareStr(const char pStr1[], char* pStr2, uint8_t strLen)
+{
+	uint8_t i, firstChange;
+	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
+	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
+	else{;}
+
+	firstChange = 0;
+	for(i=0; i<strLen; i++)
+	{
+		if(pStr1[i] == pStr2[i])
+		{	firstChange++; }
+		else
+		{	break; }
+	}
+
+	return firstChange;
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		CompareStr
+ * @brief		Compare two strings
+ * @param[in]	pStr1 String array first 
+ * @param[in]	pStr2 String array second
+ * @param[in]	pCmp Bool array that will contain compare of both strings
+ * @param[in]	strLen String lenght 
+ * @note		Same characters in boll array is set as true
+ * @return		void
+ */
+void LCD_DataControl::CompareStr(char* pStr1, char* pStr2, bool pCmp[], uint8_t strLen)
+{
+	uint8_t i;
+	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
+	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
+	else{;}
+
+	for(i=0; i<strLen; i++)
+	{
+		if(pStr1[i] == pStr2[i])
+		{	pCmp[i] = true; }
+		else
+		{	pCmp[i] = false; }
+	}
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		CompareStr
+ * @brief		Compare two strings
+ * @param[in]	pStr1 String array first 
+ * @param[in]	pStr2 String array second
+ * @param[in]	pCmp Bool array that will contain compare of both strings
+ * @param[in]	strLen String lenght 
+ * @note		Same characters in boll array is set as true
+ * @return		void
+ */
+void LCD_DataControl::CompareStr(const char pStr1[], char* pStr2, bool pCmp[], uint8_t strLen)
+{
+	uint8_t i;
+	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
+	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
+	else{;}
+
+	for(i=0; i<strLen; i++)
+	{
+		if(pStr1[i] == pStr2[i])
+		{	pCmp[i] = true; }
+		else
+		{	pCmp[i] = false; }
+	}
 }
 //====================================================================================================
 #endif // _INC_LCD_DATA_CONTROL
