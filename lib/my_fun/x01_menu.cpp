@@ -25,11 +25,11 @@ void MenuApplication_4x4::InitializeDisplay_AppTest1(void)
 	Ref_LCD_application.ClearDisplayData();
 
 	Ref_LCD_application.PrintStr("RED", 3, 0, COL_RED);
-	Ref_LCD_application.PrintStr("  0", 3, 4, COL_RED);
+	Ref_LCD_application.PrintStr("   ", 3, 4, COL_RED);
 	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, ROW_RED, COL_RED);
 
 	Ref_LCD_application.PrintStr("BLU", 3, 0, COL_BLU);
-	Ref_LCD_application.PrintStr("  0", 3, 4, COL_BLU);
+	Ref_LCD_application.PrintStr("   ", 3, 4, COL_BLU);
 	Ref_LCD_application.PrintInt(MENU_VALUE_ZERO_uint8_t, ROW_BLU, COL_BLU);
 
 	_ticketRedNum = 0;
@@ -46,11 +46,10 @@ void MenuApplication_4x4::InitializeDisplay_AppTest1(void)
  */
 void MenuApplication_4x4::Display_App_Test1(void)
 {
-	uint8_t tData;
+	uint8_t tData = _data_from_keypad_IRQ;
 
-	if(_display_data_order_active == true)
-	{	tData = _data_from_keypad_IRQ;
-
+	if(tData == true)
+	{	//tData = _data_from_keypad_IRQ;
 		switch (tData)
 		{
 		case KEYCODE_11: // Keypad 11, Increase RED tickets
@@ -83,7 +82,7 @@ void MenuApplication_4x4::Display_App_Test1(void)
 	if(_printtime == true) 
 	{
 		Ref_LCD_application.PrintTimeOther((data_time::time_t*)&(_time), 8, 0);
-		Ref_LCD_application.PrintTime((data_time::time_t*)&(_time), 8, 1);
+		Ref_LCD_application.PrintTimeOther((data_time::time_t*)&(_time), 8, 1);
 		_printtime = false;
 	}
 	else{;}

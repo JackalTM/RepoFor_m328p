@@ -156,7 +156,7 @@ inline void LCD_application::_PutCharOther(const char *c, uint8_t n_row, uint8_t
  * @param[in]	strLen		String lenght
  * @param[in]	n_row		Row place to display
  * @param[in]	n_col		Column place to display
- * @note		Private mthod	
+ * @note		Print all string characters string
  */
 inline void LCD_application::_PrintArrofChars(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col)
 {
@@ -190,7 +190,7 @@ inline void LCD_application::_PrintArrofChars(char* arrString, uint8_t strLen, u
  * @param[in]	strLen		String lenght
  * @param[in]	n_row		Row place to display
  * @param[in]	n_col		Column place to display
- * @note		Private method
+ * @note		Print all string characters string
  */
 inline void LCD_application::_PrintArrofChars(const char arrString[], uint8_t strLen, uint8_t n_row, uint8_t n_col)
 {
@@ -224,25 +224,25 @@ inline void LCD_application::_PrintArrofChars(const char arrString[], uint8_t st
  * @param[in]	strLen		String lenght
  * @param[in]	n_row		Row place to display
  * @param[in]	n_col		Column place to display
- * @note		Private mthod	
+ * @note		Print string with only changes part of a string
  */
 inline void LCD_application::_PrintArrofCharsOther(char* arrString, uint8_t strLen, uint8_t n_row, uint8_t n_col)
 {
-	uint8_t i, firstChange;
+	uint8_t i, offset;
 	char tarrstr[16];
 
 	// 1. Load data from buffer
-	strLen = LCD_DataControl::GetString(tarrstr, n_row, n_col, strLen);
+	LCD_DataControl::GetString(tarrstr, n_row, n_col, strLen);
 
 	// 2. Compare data 
-	firstChange = LCD_DataControl::CompareStr(arrString, tarrstr, strLen);
-	n_row = n_row + firstChange;
+	offset = LCD_DataControl::CompareStr(arrString, tarrstr, strLen);
+	n_row = n_row + offset;
+	strLen = strLen - offset;
 
 	// 3. Asssing str after first change
-	strLen = strLen - firstChange;
 	for(i=0; i<strLen; i++)
 	{
-		tarrstr[i] = arrString[firstChange + i];
+		tarrstr[i] = arrString[offset + i];
 	}
 
 	// 4. Print data after optimalization

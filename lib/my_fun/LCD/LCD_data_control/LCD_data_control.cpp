@@ -393,23 +393,17 @@ uint8_t LCD_DataControl::GetString(char pStr[], uint8_t n_row, uint8_t n_col, ui
  * @note		Return value is a first diferences 
  * @return		First changes in two string comparason
  */
-uint8_t LCD_DataControl::CompareStr(char* pStr1, char* pStr2, uint8_t strLen)
+uint8_t LCD_DataControl::CompareStr(char pStr1[], char pStr2[], uint8_t strLen)
 {
-	uint8_t i, firstChange;
-	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
-	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
-	else{;}
-
-	firstChange = 0;
+	uint8_t i;
 	for(i=0; i<strLen; i++)
 	{
-		if(pStr1[i] == pStr2[i])
-		{	firstChange++; }
-		else
-		{	break; }
+		if(pStr1[i] != pStr2[i])	
+			return i;
+		else{;}
 	}
 
-	return firstChange;
+	return 0;
 }
 //====================================================================================================
 
@@ -422,49 +416,38 @@ uint8_t LCD_DataControl::CompareStr(char* pStr1, char* pStr2, uint8_t strLen)
  * @note		Return value is a first diferences 
  * @return		First changes in two string comparason
  */
-uint8_t LCD_DataControl::CompareStr(const char pStr1[], char* pStr2, uint8_t strLen)
-{
-	uint8_t i, firstChange;
-	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
-	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
-	else{;}
-
-	firstChange = 0;
-	for(i=0; i<strLen; i++)
-	{
-		if(pStr1[i] == pStr2[i])
-		{	firstChange++; }
-		else
-		{	break; }
-	}
-
-	return firstChange;
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		CompareStr
- * @brief		Compare two strings
- * @param[in]	pStr1 String array first 
- * @param[in]	pStr2 String array second
- * @param[in]	pCmp Bool array that will contain compare of both strings
- * @param[in]	strLen String lenght 
- * @note		Same characters in boll array is set as true
- * @return		void
- */
-void LCD_DataControl::CompareStr(char* pStr1, char* pStr2, bool pCmp[], uint8_t strLen)
+uint8_t LCD_DataControl::CompareStr(const char pStr1[], char pStr2[], uint8_t strLen)
 {
 	uint8_t i;
-	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)
-	{	strLen = DISPLAY_BUFFER_CURRSOR_IDX_END;}
-	else{;}
+	for(i=0; i<strLen; i++)
+	{
+		if(pStr1[i] != pStr2[i])	
+			return i;
+		else{;}
+	}
+	return strLen;
+}
+//====================================================================================================
 
+/*****************************************************************************************************
+ * @name		CompareStr
+ * @brief		Compare two strings
+ * @param[in]	pStr1 String array first 
+ * @param[in]	pStr2 String array second
+ * @param[in]	pCmp Bool array that will contain compare of both strings
+ * @param[in]	strLen String lenght 
+ * @note		Same characters in boll array is set as true
+ * @return		void
+ */
+void LCD_DataControl::CompareStr(char pStr1[], char pStr2[], bool pCmp[], uint8_t strLen)
+{
+	uint8_t i;
 	for(i=0; i<strLen; i++)
 	{
 		if(pStr1[i] == pStr2[i])
-		{	pCmp[i] = true; }
+			pCmp[i] = true; 
 		else
-		{	pCmp[i] = false; }
+			pCmp[i] = false; 
 	}
 }
 //====================================================================================================
@@ -479,7 +462,7 @@ void LCD_DataControl::CompareStr(char* pStr1, char* pStr2, bool pCmp[], uint8_t 
  * @note		Same characters in boll array is set as true
  * @return		void
  */
-void LCD_DataControl::CompareStr(const char pStr1[], char* pStr2, bool pCmp[], uint8_t strLen)
+void LCD_DataControl::CompareStr(const char pStr1[], char pStr2[], bool pCmp[], uint8_t strLen)
 {
 	uint8_t i;
 	if(strLen > DISPLAY_BUFFER_CURRSOR_IDX_END)

@@ -105,10 +105,10 @@ public:
     
     uint8_t GetString(char pStr[], uint8_t n_row, uint8_t n_col, uint8_t strLen);
 
-    uint8_t CompareStr(char* pStr1, char* pStr2, uint8_t strLen);
-    uint8_t CompareStr(const char pStr1[], char* pStr2, uint8_t strLen);
-    void  CompareStr(char* pStr1, char* pStr2, bool pCmp[], uint8_t strLen);
-    void  CompareStr(const char pStr1[], char* pStr2, bool pCmp[], uint8_t strLen);
+    uint8_t CompareStr(char pStr1[], char pStr2[], uint8_t strLen);
+    uint8_t CompareStr(const char pStr1[], char pStr2[], uint8_t strLen);
+    void  CompareStr(char pStr1[], char pStr2[], bool pCmp[], uint8_t strLen);
+    void  CompareStr(const char pStr1[], char pStr2[], bool pCmp[], uint8_t strLen);
 };
 //==============================================================================================
 #endif // ifndef LCD_DATA_CONTROL_H_
