@@ -16,270 +16,179 @@
  */
 //====================================================================================================
 
+
 /*****************************************************************************************************
- * @name		  itoa_simple_helper
- * @brief		  void
- * @param[in]	dest Pointer to destination array with strig data 
- * @note		  void
- * @return		void
+ * @name    itoa_uint
+ * @brief   itoa for unsigned int 
+ * @param   num Number to convert into string
+ * @param   p_buffer Pointer to char buffer 
+ * @param   base Base of number format to convert into [8, 10, 16]
+ * @return  pointer to char this function is recursive 
  */
-char* NumbersConversion::itoa_simple_helper(char *dest, int i) 
+char* NumbersConversion::itoa_uint(char* p_buffer, unsigned int num, const unsigned int base)
 {
-  if (i <= -10) 
+  switch (base)
   {
-    dest = itoa_simple_helper(dest, i/10);
-  }
+  case 8:
+    if(num >= 8)
+    {   p_buffer = itoa_uint( p_buffer, num/8, 8);
+    }else{;}
+
+    *p_buffer++ = '0' + (num % 8);
+
+    return p_buffer;
+    break;
+
+  case 10:
+    if(num >= 10)
+    {   p_buffer = itoa_uint(p_buffer, num/10, 10);
+    }else{;}
+
+    *p_buffer++ = '0' + (num % 10);
+
+    return p_buffer;
+    break;
+
+  case 16:
+    if(num >= 16)
+    {   p_buffer = itoa_uint(p_buffer, num/16, 16);
+    }else{;}
+
+    num = (num % 16);
+    if(num > 9)  { num = ('7' + num);} // '7' + 10 = 'A'
+    else          { num = ('0' + num);}
+    *p_buffer++ = num;
+
+    return p_buffer;
+    break;
   
-  *dest++ = '0' - i%10;
-  return dest;
+  default:
+    break;
+  }
+
+  return p_buffer;
 }
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		  itoa_simple
- * @brief		  void
+ * @name		  itoa_int
+ * @brief		  itoa for signed int
  * @param[in]	dest Pointer to destination array with strig data 
  * @note		  void
  * @return		void
  */
-char* NumbersConversion::itoa_simple(char *dest, int i) 
+char* NumbersConversion::itoa_int(char* p_buffer, unsigned int num, const int base)
 {
-  char *s = dest;
-  if (i < 0) 
-  {
-    *s++ = '-';
-  } 
+  char* p_char;
+
+  if (num < 0) 
+    *p_char++ = '-';
   else 
-  {
-    i = -i;
-  }
-  *itoa_simple_helper(s, i) = '\0';
-  return dest;
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  Uint_to_str_dec
- * @brief		  Recurent function to convert number of type int to string format
- * @param[in]	pStr Pointer to destination array with strig data 
- * @param[in] uint Number to convert into string
- * @note		  void
- * @return		Pointer to next addr where char will be placed
- */
- char* NumbersConversion::Uint_to_str_dec(char *pStr, uint8_t uint)
-{
-  _Str_n++;
-  if(_Str_n < _StrMax)
-  {// Only when char array max len is not reached
-    if (uint >= 10) 
-    {
-      pStr = Uint_to_str_dec(pStr, uint/10);
-    }
-    
-    *pStr++ = '0' + (uint%10);
-    return pStr;
-  }
-  else
-  {// char array max lenght is reached then return 
-    return pStr;
-  }
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  Uint_to_str_hex
- * @brief		  Recurent function to convert number of type int to string format
- * @param[in]	pStr Pointer to destination array with strig data 
- * @param[in] uint Number to convert into string
- * @note		  void
- * @return		Pointer to next addr where char will be placed
- */
- char* NumbersConversion::Uint_to_str_hex(char *pStr, uint8_t uint)
-{
-  _Str_n++;
-  if(_Str_n < _StrMax)
-  {// Only when max len is not reached
-    if (uint >= 0x10) 
-    {
-      pStr = Uint_to_str_hex(pStr, uint/0x10);
-    }
-    uint = (uint%0x10);
-
-  // In ASCI: '7'(55) + 10 = 'A'(65)
-  // Specyfic calculation for this aspect
-    if(uint > 9)  { uint = ('7' + uint);} // '7' + 10 = 'A'
-    else          { uint = ('0' + uint);}
-    
-    *pStr++ = uint;
-
-    return pStr;
-  }
-  else
-  {// char array max lenght is reached then return 
-    return pStr;
-  }
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		FormatConvert
- * @brief		Constructor
- */
-FormatConvert::FormatConvert(void){;}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		~FormatConvert
- * @brief		Deconstructor
- */
-FormatConvert::~FormatConvert(){;}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  SetCharArray
- * @brief		  Fill array with input character 
- * @param[in]	arrChar Pointer to character array to fill with.
- * @param[in]	strLen  Character array lenght
- * @param[in]	inChar  Character to fill array with
- * @note		  void
- * @return		void
- */
-void FormatConvert::_SetCharArray(char arrChar[], uint8_t strLen, char inChar)
-{
-  uint8_t i;
-  for(i=0; i<strLen; i++) { arrChar[i] = inChar;}
+    num = -num;
+  *itoa_uint(p_char, num, base) = '\0';
+  return p_buffer;
 }
 //====================================================================================================
 
 /*****************************************************************************************************
  * @name		NumToString
  * @brief		This method convert number to string in format decimal
- * 
- * @param[in] number Number that will be converted to string
- * @param[in]	arrChar[] Pointer to array of chars
- * @param[in] DecimalNumberStringSize destination string size
- * 
- * @note		void
- * @return	void
+ *
+ * @param[in] 	number Number that will be converted to string
+ * @param[in]	  arrChar[] Pointer to array of chars
+ * @param[in] 	DecimalNumberStringSize destination string size
+ *
+ * @note		  void
+ * @return		strlen(arrChar)
  */
-void FormatConvert::NumToString(uint8_t number, char arrChar[], DecimalNumberStringSize strSize)
+unsigned int NumbersConversion::Uint_to_str_oct(char* p_buffer, unsigned int num)
 {
-  _SetCharArray(arrChar, strSize, ' ');
-  NumbersConversion::SetMaxStringLenght(strSize);
-  *(NumbersConversion::Uint_to_str_dec(arrChar, number))  = '\0';
+  *(itoa_uint(p_buffer, num, 8)) = '\0';
+  return strlen(p_buffer);
 }
 //====================================================================================================
 
 /*****************************************************************************************************
  * @name		NumToString
+ * @brief		This method convert number to string in format decimal
+ *
+ * @param[in] 	number Number that will be converted to string
+ * @param[in]	  arrChar[] Pointer to array of chars
+ * @param[in] 	DecimalNumberStringSize destination string size
+ *
+ * @note		  void
+ * @return		strlen(arrChar)
+ */
+unsigned int NumbersConversion::Uint_to_str_dec(char* p_buffer, unsigned int num)
+{
+  *(itoa_uint(p_buffer, num, 10)) = '\0';
+  return strlen(p_buffer);
+}
+//====================================================================================================
+
+/*****************************************************************************************************
+ * @name		NumToString
+ * @brief		This method convert number to string in format decimal
+ *
+ * @param[in] 	number Number that will be converted to string
+ * @param[in]	  arrChar[] Pointer to array of chars
+ * @param[in] 	DecimalNumberStringSize destination string size
+ *
+ * @note		  void
+ * @return		strlen(arrChar)
+ */
+unsigned int NumbersConversion::Int_to_str_dec(char* p_buffer, int num)
+{
+  *(itoa_int(p_buffer, num, 10)) = '\0';
+  return strlen(p_buffer);
+}
+//====================================================================================================
+
+
+/*****************************************************************************************************
+ * @name		NumToString
  * @brief		This method convert number to string in format hexadecimal
- * 
- * @param[in] number Number that will be converted to string
- * @param[in]	arrChar[] Pointer to array of chars
- * @param[in] HexadeciNumberStringSize destination string size
- * 
- * @note		void
- * @return	void
+ *
+ * @param[in] 	number Number that will be converted to string
+ * @param[in]	  arrChar[] Pointer to array of chars
+ * @param[in] 	HexadeciNumberStringSize destination string size
+ *
+ * @note		  void
+ * @return		strlen(arrChar)
  */
-void FormatConvert::NumToString(uint8_t number, char arrChar[], HexadeciNumberStringSize strSize)
+unsigned int NumbersConversion::Uint_to_str_hex(char* p_buffer, unsigned int num)
 {
-  _SetCharArray(arrChar, strSize, ' ');
-  NumbersConversion::SetMaxStringLenght(strSize);
-  *(NumbersConversion::Uint_to_str_hex(arrChar, number))  = '\0';
+  *(itoa_uint(p_buffer, num, 16)) = '\0';
+  return strlen(p_buffer);
 }
 //====================================================================================================
 
 /*****************************************************************************************************
- * @name		  ToStrFormat
- * @brief		  Convert string from front to end of a string array 
- * 
- * @param[in]	arrSRC Pointer to source array 
- * @param[in]	lenSRC Lenght of source array 
- * @param[in]	arrDST Pointer to destination array 
- * @param[in]	lenDST Lenght of destination array 
- * 
- * @note		  Input lenght need to be widhout '\0' marker on the end
+ * @name		CUST_CONV_StrFormatToRight
+ * @brief		Convert string from front to end of a string array
+ *
+ * @param[in]	arrSRC[] Pointer to source array
+ * @param[in]	lenSRC strlen(arrChar)
+ * @param[in]	arrDST[] Pointer to destination array
+ * @param[in]	lenDST strlen(arrChar)
+ * @param[in] c char to fil empty spaces
+ *
+ * @note		  Input lenght need to be strlen(arrChar)
  *            This string is formating specyfic
  * @return		void
  */
-
-void FormatConvert::ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST)
+void FormatConvert::StrFormatToRight(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST, char c)
 {
-  uint8_t i, j;
-  char tChar;
+  unsigned int i,j;
+  for(i=0; i<lenDST; i++) 
+  { arrDST[i] = c; }
 
-  // destination array of chars is prepared for conversion
-  for(i=0; i<lenDST; i++) { arrDST[i] = ' '; }
+  arrDST[lenDST] = '\0';
 
+  j = lenDST - 1;
   i = lenSRC - 1;
-  j = lenDST - 1; // Varibale in overflof and it will be 0xFF
-  while((i < lenSRC) && (j < lenDST))
-  {
-    tChar = arrSRC[i];
-    i--;
-
-    //if(tChar == '\0') { break; }
-    //else{;}
-
-    if((tChar >= '0') && (tChar <= '9'))
-    {
-      arrDST[j] = tChar;
-      j--;
-    }
-    else{;}
-  }
-}
-//====================================================================================================
-
-/*****************************************************************************************************
- * @name		  ToStrFormat
- * @brief		  Convert string from front to end of a string array 
- * 
- * @param[in]	arrSRC Pointer to source array 
- * @param[in]	lenSRC Lenght of source array 
- * @param[in]	arrDST Pointer to destination array 
- * @param[in]	lenDST Lenght of destination array 
- * 
- * @note		  Input lenght need to be widhout '\0' marker on the end
- *            This string is formating specyfic
- * @return		void
- */
-
-void FormatConvert::ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST)
-{
-  uint8_t i, j;
-  char tChar;
-
-  // destination array of chars is prepared for conversion
-  for(i=0; i<lenDST; i++) { arrDST[i] = ' '; }
-
-  i = lenSRC - 1;
-  j = lenDST - 1; // Varibale in overflof and it will be 0xFF
-  while((i < lenSRC) && (j < lenDST))
-  {
-    tChar = arrSRC[i];
-    i--;
-
-    //if(tChar == '\0') { break; }
-    //else{;}
-
-    if((tChar >= '0') && (tChar <= '9'))
-    {
-      arrDST[j] = tChar;
-      j--;
-    }
-    else if((tChar >= 'A') && (tChar <= 'F'))
-    {
-      arrDST[j] = tChar;
-      j--;
-    }
-    else if((tChar >= 'a') && (tChar <= 'f'))
-    {
-      arrDST[j] = tChar;
-      j--;
-    }
-    else{;}
-  }
+  while((j < 0x7F) && (i < 0x7F))
+  { arrDST[j--] = arrSRC[i--];}
 }
 //====================================================================================================
 
@@ -290,19 +199,22 @@ void FormatConvert::ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[],
  * @note		  void
  * @return		void
  */
-void FormatConvert::TimeToStr(data_time::time_t *pTime, char arrChar[])
+void FormatConvert::TimeToStr(data_time::time_t *pTime, char arrChar[], char mark)
 {
   char tArray[8];
-  NumToString(pTime->hour, (char*)&tArray[0], TYPE_DEC_time_t);
-  NumToString(pTime->minute, (char*)&tArray[3], TYPE_DEC_time_t);
-  NumToString(pTime->second, (char*)&tArray[7], TYPE_DEC_time_t);
+  unsigned int t_strlen;
+  t_strlen = NumbersConversion::Uint_to_str_dec((char*)&tArray[0], pTime->hour);
+  StrFormatToRight((char*)&tArray[0], 2, (char*)&arrChar[0], 2, '0');
 
-  ToStrFormatDec((char*)&tArray[0], 2, (char*)&arrChar[0], 2);
-  ToStrFormatDec((char*)&tArray[3], 2, (char*)&arrChar[3], 2);
-  ToStrFormatDec((char*)&tArray[7], 2, (char*)&arrChar[7], 2);
+  t_strlen = NumbersConversion::Uint_to_str_dec((char*)&tArray[3], pTime->minute);
+  StrFormatToRight((char*)&tArray[3], 2, (char*)&arrChar[3], 2, '0');
 
-  arrChar[2] = ':';
-  arrChar[6] = ':';
+  t_strlen = NumbersConversion::Uint_to_str_dec((char*)&tArray[7], pTime->second);
+  StrFormatToRight((char*)&tArray[7], 2, (char*)&arrChar[7], 2, '0');
+
+  arrChar[2] = mark;
+  arrChar[6] = mark;
+  arrChar[8] = '\0';
 }
 //====================================================================================================
 
@@ -315,19 +227,22 @@ void FormatConvert::TimeToStr(data_time::time_t *pTime, char arrChar[])
  * @note		  void
  * @return		void
  */
-void FormatConvert::TimeToStr(uint8_t hour, uint8_t minute, uint8_t second, char arrChar[])
+void FormatConvert::TimeToStr(uint8_t hour, uint8_t minute, uint8_t second, char arrChar[], char mark)
 {
   char tArray[8];
-  NumToString(hour, (char*)&tArray[0], TYPE_DEC_time_t);
-  NumToString(minute, (char*)&tArray[3], TYPE_DEC_time_t);
-  NumToString(second, (char*)&tArray[7], TYPE_DEC_time_t);
+  unsigned int t_strlen;
+  t_strlen = NumbersConversion::Uint_to_str_dec((char*)&tArray[0], hour);
+  StrFormatToRight((char*)&tArray[0], 2, (char*)&arrChar[0], 2, '0');
 
-  ToStrFormatDec((char*)&tArray[0], 2, (char*)&arrChar[0], 2);
-  ToStrFormatDec((char*)&tArray[3], 2, (char*)&arrChar[3], 2);
-  ToStrFormatDec((char*)&tArray[7], 2, (char*)&arrChar[7], 2);
+  t_strlen = NumbersConversion::Uint_to_str_dec((char*)&tArray[3], minute);
+  StrFormatToRight((char*)&tArray[3], 2, (char*)&arrChar[3], 2, '0');
 
-  arrChar[2] = ':';
-  arrChar[6] = ':';
+  t_strlen = NumbersConversion::Uint_to_str_dec((char*)&tArray[7], second);
+  StrFormatToRight((char*)&tArray[7], 2, (char*)&arrChar[7], 2, '0');
+
+  arrChar[2] = mark;
+  arrChar[6] = mark;
+  arrChar[8] = '\0';
 }
 //====================================================================================================
 

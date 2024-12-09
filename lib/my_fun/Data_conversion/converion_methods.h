@@ -8,16 +8,9 @@
 #ifdef _INC_CONVERSION_METHODS
 
 #include "stdint.h"
+#include "string.h"
 #include "convert_data_and_time.h"
 #include "Global_macros/bit_mask_macros.h"
-
-#define CONVERSION_TYPE_DEC_uint8_t 4U
-#define CONVERSION_TYPE_DEC_uint16_t 6U
-#define CONVERSION_TYPE_DEC_uint32_t 10U
-
-#define CONVERSION_TYPE_DEC_int8_t 5U
-#define CONVERSION_TYPE_DEC_int16_t 7U
-#define CONVERSION_TYPE_DEC_int32_t 11U
 
 #define CONVERSION_TYPE_ASCI_HEX_BASE ('A' - 0xA)
 
@@ -52,20 +45,19 @@ struct NumberStrSize_t
 class NumbersConversion
 {
 private:
-    uint8_t _StrMax, _Str_n;
-
-    char* itoa_simple_helper(char *dest, int i);
-    char* itoa_simple(char *dest, int i);
+    char* itoa_uint(char* p_buffer, unsigned int num, const unsigned int base);
+    char* itoa_int(char* p_buffer, unsigned int num, const int base);
 
 public:
     NumbersConversion(void) {;}
-    ~NumbersConversion() {;}
-
-    void SetMaxStringLenght(DecimalNumberStringSize strSize)     { _StrMax = strSize; _Str_n = 0; }
-    void SetMaxStringLenght(HexadeciNumberStringSize strSize)    { _StrMax = strSize; _Str_n = 0; }
+    ~NumbersConversion(void) {;}
     
-    char* Uint_to_str_dec(char *pStr, uint8_t uint);
-    char* Uint_to_str_hex(char *pStr, uint8_t uint);
+    unsigned int Uint_to_str_oct(char* p_buffer, unsigned int num);
+
+    unsigned int Uint_to_str_dec(char* p_buffer, unsigned int num);
+    unsigned int Int_to_str_dec(char* p_buffer, int num);
+
+    unsigned int Uint_to_str_hex(char* p_buffer, unsigned int num);
 };
 //====================================================================================================
 
@@ -80,28 +72,10 @@ public:
 //====================================================================================================
 
 /*****************************************************************************************************
- * @brief   Definitions for time conversion
- */
-#define TIME_CONVERSION_STR_LEN 0x08U
-
-#define TIME_CONVERSION_HOURS_MAX 24U
-#define TIME_CONVERSION_MINUTES_MAX 60U
-#define TIME_CONVERSION_SOCUNDS_MAX 60U
-
-#define CONVERSION_BASE_NUM_DIGIT_MIN (char)'0'
-#define CONVERSION_BASE_NUM_DIGIT_MAX (char)'9'
-
-#define CONVERSION_BASE_NUM_LETER_MIN (char)'A'
-#define CONVERSION_BASE_NUM_LETER_MAX (char)'Z'
-
-#define TIME_CONVERSION_NUMBER_BASEBNUM 0x40
-//====================================================================================================
-
-/*****************************************************************************************************
  * @name		ConvertTime
  * @brief		Clas to convert nmbers system
  */
-class FormatConvert: private NumbersConversion
+class FormatConvert: public NumbersConversion
 {
 private:
     void _SetCharArray(char arrChar[], uint8_t strLen, char inChar);
@@ -110,17 +84,12 @@ public:
     FormatConvert(void);
     ~FormatConvert();
 
-    // Conversion methods 
-    void NumToString(uint8_t number, char arrChar[], DecimalNumberStringSize strSize);
-    void NumToString(uint8_t number, char arrChar[], HexadeciNumberStringSize strSize);
-
     // String custom formating 
-    void ToStrFormatDec(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST);
-    void ToStrFormatHex(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST);
+    void StrFormatToRight(char arrSRC[], uint8_t lenSRC, char arrDST[], uint8_t lenDST, char c);
 
     // Time to string formating
-    void TimeToStr(data_time::time_t *pTime, char arrChar[]);
-    void TimeToStr(uint8_t hour, uint8_t minute, uint8_t second, char arrChar[]);
+    void TimeToStr(data_time::time_t *pTime, char arrChar[], char mark);
+    void TimeToStr(uint8_t hour, uint8_t minute, uint8_t second, char arrChar[], char mark);
 };
 //====================================================================================================
 #endif // _INC_CONVERSION_METHOD
